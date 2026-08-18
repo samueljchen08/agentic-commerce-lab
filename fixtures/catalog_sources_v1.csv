@@ -1,0 +1,17 @@
+product_id,field_name,value,source_url,checked_at,verification_note
+P001,brand,,,,"FOCAL PRODUCT — pick a mid-pack contender, not the cheapest or most premium"
+P001,title,,,,
+P001,price_cents,,,,"integer cents, no decimals"
+P001,shipping_price_cents,,,,
+P001,shipping_eta_min_days,,,,
+P001,shipping_eta_max_days,,,,"this is the SLA used in the representation-validity arm"
+P001,returns_window_days,,,,
+P001,attr_weight_lb,,,,
+P001,attr_capacity_l,,,,
+P001,attr_shell_material,,,,
+P001,attr_wheels,,,,
+P001,attr_tsa_lock,,,,
+P001,attr_expandable,,,,
+P002,brand,,,,"competitor 1"
+P002,title,,,,
+P002,price_cents,,,,
