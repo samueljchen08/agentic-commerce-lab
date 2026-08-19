@@ -56,10 +56,19 @@ class CostEstimate:
 
 
 def approx_tokens(text: str) -> int:
-    """Chars/3.6 — deliberately conservative for JSON, which tokenizes worse
-    than prose because of punctuation and quoted keys. Better to overestimate
-    a budget than to blow through it."""
-    return int(len(text) / 3.6) + 1
+    """Chars/2.4.
+
+    Calibrated against a real call, not assumed: a probe estimated at 2,748
+    input tokens actually consumed 4,146 (+86%). Two compounding reasons —
+    JSON tokenizes worse than prose because of punctuation and quoted keys,
+    and Claude 4.7+ tokenizers produce roughly 30% more tokens for the same
+    text than older heuristics assume.
+
+    Re-calibrate this against `scripts/check_provider.py` output whenever the
+    model or the candidate-record shape changes. An underestimating preflight
+    is a budget gate that has quietly stopped protecting you.
+    """
+    return int(len(text) / 2.4) + 1
 
 
 def estimate_cost(
