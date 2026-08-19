@@ -1,42 +1,66 @@
-# Building catalog_v1 — your task, ~2 hours
+# Building catalog_v1 — standing desks. Your task, ~2 hours.
 
-10–12 products. One is the focal (yours). The rest are real competitors.
+12 desks. One is the focal (the merchant we're advising). The rest are real
+competitors. Every public fact needs a source URL and a timestamp in
+`catalog_sources_v1.csv`.
+
+## Pre-flight, 5 minutes — do this before sourcing all 12
+
+Open five brand product pages and write down **shipping cost** and **stated
+lead time**. If all five are identical, the category has no headroom and three
+of your four arms are dead on arrival. Standing desks should show wide spread
+here — that's why we picked them.
 
 ## Rules
 
-1. **Every public fact needs a source URL and a timestamp.** Price, shipping cost,
-   delivery estimate, return window, and physical specs all come off a real product
-   page you looked at. Fill `catalog_sources_v1.csv` as you go — one row per field.
-2. **Do not store images.** Usage rights are unclear and you do not need them.
-3. **Do not scrape.** Twelve products by hand is two hours and is auditable.
-   A scraper is a week and is not.
-4. **Synthetic goes in a separate file.** COGS, fulfillment cost, return rate,
-   payment fees, channel volumes, conversion, cannibalization — none of these are
-   public. They live in `economics_demo_v1.json` and the report labels them
-   SYNTHETIC. Never mix them into the catalog.
+1. **Source everything public.** Price, shipping cost, lead time, return window,
+   return fee, and every spec come off a real page you looked at.
+2. **No images.** Usage rights are unclear and you don't need them.
+3. **No scraping.** Twelve by hand is two hours and is auditable.
+4. **Synthetic stays separate.** COGS, fulfillment cost, return rate, channel
+   volumes, conversion, cannibalization are not public. They live in
+   `economics_demo_v1.json` and the report labels them SYNTHETIC.
+5. **Leave blanks blank.** If noise_db isn't published, leave it empty. A blank
+   is data — it's exactly what the attribute-completion arm is about. Never
+   invent a spec.
 
-## The one decision that matters statistically
+## Candidate brands
 
-**Pick a focal product that is a genuine mid-pack contender.**
+Uplift, Fully/Branch, Autonomous, FlexiSpot, Vari, Ergonofis, Desky, Secretlab,
+Progressive Desk, Humanscale, Steelcase, Jarvis, ApexDesk, Flexispot E7.
 
-If the focal product is uncompetitive, its baseline selection rate will be ~2%, and
-detecting a 3pp change on a 2% base needs several thousand mandates. If it is
-obviously dominant, everything saturates at the ceiling and no intervention moves it.
+## Choosing the focal — the decision with the largest statistical consequence
 
-Target a baseline selection rate of **10–20%**. Practically that means: mid-price
-for the set, decent but not best specs, at least one visible weakness an
-intervention could plausibly fix (slow shipping, thin attributes, paid shipping).
+**The focal must be a genuine mid-pack contender, weak precisely where the
+interventions act.**
 
-You will not know the real baseline until Day 1 runs. If the smoke test comes back
-below ~5% or above ~35%, swap the focal product before building the full mandate
-set. That swap is cheap on Day 1 and expensive on Day 5.
+That means: competitive on specs and price, but currently carrying **paid
+shipping**, a **long stated lead time**, and ideally an **incomplete attribute
+set**. Those three weaknesses are what the arms have room to fix. A focal that's
+already free-shipping, fast, and fully specced has no headroom and every arm
+returns zero.
 
-## Coverage to aim for across the 12
+Target baseline selection rate: **0.10 to 0.20**.
 
-- price spread of at least 2.5x from cheapest to most expensive
-- at least 3 with free shipping, at least 3 with paid shipping
-- delivery estimates ranging from ~2 days to ~10 days
-- a mix of return windows (30 / 45 / 60 day)
-- at least 4 with materially different specs on the attribute your mandates care about
+The placeholder D05 is built this way — $579, $79 shipping, 12–24 day lead,
+strong frame specs — and lands at 0.133. Use it as the shape to match.
 
-Homogeneous sets produce null results. Spread is what makes effects measurable.
+| Baseline you measure | Meaning | Action |
+|---|---|---|
+| under 0.05 | focal is uncompetitive; effects unmeasurable | swap focal, rerun smoke test |
+| 0.10–0.20 | ideal | proceed |
+| over 0.35 | saturated; nothing can move it | strengthen competitors or weaken focal |
+
+## Coverage to hit across the 12
+
+Run `catalog_shape_report()` after building — it checks these automatically:
+
+- price spread at least 2.5x low to high
+- at least 3 free-shipping and 3 paid-shipping
+- lead times spanning at least 10 days min-to-max
+- 2 to 10 desks meeting each hard constraint (raise to 51in+, hold 250lb+,
+  width 48in or under)
+
+That last one matters most. If only one desk clears a hard constraint, that
+segment has a forced answer and contributes no information. If all twelve clear
+it, the constraint does nothing.

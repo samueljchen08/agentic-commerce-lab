@@ -1,11 +1,13 @@
-.PHONY: help setup test lint sim slice clean
+.PHONY: help setup test lint sim dryrun smoke slice clean
 
 help:
 	@echo "make setup   install deps into .venv"
 	@echo "make test    run the test suite"
 	@echo "make lint    ruff check"
 	@echo "make sim     full loop on the simulated oracle (free, no API calls)"
-	@echo "make slice   vertical slice against a real provider (COSTS MONEY)"
+	@echo "make dryrun  cost preflight only, dispatches nothing"
+	@echo "make smoke   20 real probes, control arm only (~\$$0.20)"
+	@echo "make slice   full 5-arm run, 60 mandates (~\$$3)"
 	@echo "make clean   remove artifacts and caches"
 
 setup:
@@ -23,8 +25,14 @@ lint:
 sim:
 	./.venv/bin/python -m scripts.run_simulated
 
+smoke:
+	./.venv/bin/python -m scripts.run_vertical_slice --smoke
+
+dryrun:
+	./.venv/bin/python -m scripts.run_vertical_slice --smoke --dry-run
+
 slice:
-	./.venv/bin/python -m scripts.run_vertical_slice
+	./.venv/bin/python -m scripts.run_vertical_slice --mandates 60
 
 clean:
 	rm -rf artifacts/raw artifacts/*.json artifacts/*.html

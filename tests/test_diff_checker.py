@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from acop._seed_catalog import MERCHANT_PRODUCT_ID, build_catalog
+from acop.catalog import PLACEHOLDER_FOCAL_ID as MERCHANT_PRODUCT_ID, placeholder_catalog as build_catalog
 from acop.domain import Intervention, InterventionType, cents
 from acop.experiment import UndeclaredTreatmentDiff, apply_intervention, assert_only_declared_changes
 

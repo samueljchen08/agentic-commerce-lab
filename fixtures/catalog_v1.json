@@ -1,0 +1,520 @@
+{
+  "version": "v1",
+  "category": "standing_desk",
+  "generated_at": "2026-08-18",
+  "verification": {
+    "products": 12,
+    "real": 11,
+    "fictional": 1,
+    "products_with_gaps": 11,
+    "total_unverified_fields": 44,
+    "missing_by_product": {
+      "D01": [
+        "shipping_usd",
+        "eta_min_days",
+        "eta_max_days",
+        "returns_fee_usd"
+      ],
+      "D02": [
+        "shipping_usd",
+        "eta_min_days",
+        "eta_max_days",
+        "returns_fee_usd"
+      ],
+      "D03": [
+        "shipping_usd",
+        "eta_min_days",
+        "eta_max_days",
+        "returns_fee_usd"
+      ],
+      "D04": [
+        "shipping_usd",
+        "eta_min_days",
+        "eta_max_days",
+        "returns_fee_usd"
+      ],
+      "D05": [
+        "shipping_usd",
+        "eta_min_days",
+        "eta_max_days",
+        "returns_fee_usd"
+      ],
+      "D06": [
+        "shipping_usd",
+        "eta_min_days",
+        "eta_max_days",
+        "returns_fee_usd"
+      ],
+      "D07": [
+        "shipping_usd",
+        "eta_min_days",
+        "eta_max_days",
+        "returns_fee_usd"
+      ],
+      "D08": [
+        "shipping_usd",
+        "eta_min_days",
+        "eta_max_days",
+        "returns_fee_usd"
+      ],
+      "D09": [
+        "shipping_usd",
+        "eta_min_days",
+        "eta_max_days",
+        "returns_fee_usd"
+      ],
+      "D10": [
+        "shipping_usd",
+        "eta_min_days",
+        "eta_max_days",
+        "returns_fee_usd"
+      ],
+      "D11": [
+        "shipping_usd",
+        "eta_min_days",
+        "eta_max_days",
+        "returns_fee_usd"
+      ]
+    },
+    "ready_for_real_run": false
+  },
+  "products": [
+    {
+      "product_id": "D01",
+      "brand": "FlexiSpot",
+      "title": "FlexiSpot E5 (48x24)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 48,
+        "depth_in": 24,
+        "height_min_in": 28.4,
+        "height_max_in": 48.0,
+        "weight_capacity_lb": 220,
+        "motors": 2,
+        "leg_stages": 2,
+        "warranty_years": 10,
+        "top_material": "laminate",
+        "presets": 4,
+        "cable_management": false
+      },
+      "price_cents": 26900,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 0,
+        "eta_min_days": 0,
+        "eta_max_days": 0
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 0
+      },
+      "warranty": {
+        "duration_months": 120,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": false
+    },
+    {
+      "product_id": "D02",
+      "brand": "FlexiSpot",
+      "title": "FlexiSpot E7 (48x24)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 48,
+        "depth_in": 24,
+        "height_min_in": 22.8,
+        "height_max_in": 48.4,
+        "weight_capacity_lb": 355,
+        "motors": 2,
+        "leg_stages": 3,
+        "warranty_years": 15,
+        "top_material": "laminate",
+        "presets": 4,
+        "cable_management": true,
+        "noise_db": 50
+      },
+      "price_cents": 36900,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 0,
+        "eta_min_days": 0,
+        "eta_max_days": 0
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 0
+      },
+      "warranty": {
+        "duration_months": 180,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": false
+    },
+    {
+      "product_id": "D03",
+      "brand": "FlexiSpot",
+      "title": "FlexiSpot E7 Pro (55x28)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 55,
+        "depth_in": 28,
+        "height_min_in": 24.0,
+        "height_max_in": 50.6,
+        "weight_capacity_lb": 440,
+        "motors": 2,
+        "leg_stages": 3,
+        "warranty_years": 15,
+        "top_material": "bamboo",
+        "presets": 4,
+        "cable_management": true,
+        "noise_db": 50
+      },
+      "price_cents": 49900,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 0,
+        "eta_min_days": 0,
+        "eta_max_days": 0
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 0
+      },
+      "warranty": {
+        "duration_months": 180,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": false
+    },
+    {
+      "product_id": "D04",
+      "brand": "FlexiSpot",
+      "title": "FlexiSpot E7 Plus 4-leg (72x30)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 72,
+        "depth_in": 30,
+        "height_min_in": 24.4,
+        "height_max_in": 49.6,
+        "weight_capacity_lb": 440,
+        "motors": 2,
+        "leg_stages": 3,
+        "warranty_years": 15,
+        "top_material": "bamboo",
+        "presets": 4,
+        "cable_management": true
+      },
+      "price_cents": 69900,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 0,
+        "eta_min_days": 0,
+        "eta_max_days": 0
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 0
+      },
+      "warranty": {
+        "duration_months": 180,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": false
+    },
+    {
+      "product_id": "D05",
+      "brand": "Vari",
+      "title": "Vari Essential Electric (48x24)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 48,
+        "depth_in": 24,
+        "height_min_in": 27.5,
+        "height_max_in": 47.2,
+        "weight_capacity_lb": 150,
+        "motors": 1,
+        "leg_stages": 2,
+        "warranty_years": 3,
+        "top_material": "laminate",
+        "presets": 4,
+        "cable_management": false
+      },
+      "price_cents": 39900,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 0,
+        "eta_min_days": 0,
+        "eta_max_days": 0
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 0
+      },
+      "warranty": {
+        "duration_months": 36,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": false
+    },
+    {
+      "product_id": "D06",
+      "brand": "Vari",
+      "title": "Vari Electric Standing Desk (60x30)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 60,
+        "depth_in": 30,
+        "height_min_in": 25.5,
+        "height_max_in": 50.5,
+        "weight_capacity_lb": 200,
+        "motors": 2,
+        "leg_stages": 2,
+        "warranty_years": 5,
+        "top_material": "laminate",
+        "presets": 4,
+        "cable_management": true
+      },
+      "price_cents": 79500,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 0,
+        "eta_min_days": 0,
+        "eta_max_days": 0
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 0
+      },
+      "warranty": {
+        "duration_months": 60,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": false
+    },
+    {
+      "product_id": "D07",
+      "brand": "Branch",
+      "title": "Branch Duo (57x27)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 57,
+        "depth_in": 27,
+        "height_min_in": 25.5,
+        "height_max_in": 50.5,
+        "weight_capacity_lb": 275,
+        "motors": 2,
+        "leg_stages": 2,
+        "warranty_years": 10,
+        "top_material": "laminate",
+        "presets": 4,
+        "cable_management": false
+      },
+      "price_cents": 54900,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 0,
+        "eta_min_days": 0,
+        "eta_max_days": 0
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 0
+      },
+      "warranty": {
+        "duration_months": 120,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": false
+    },
+    {
+      "product_id": "D08",
+      "brand": "Autonomous",
+      "title": "Autonomous SmartDesk Core (53x29)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 53,
+        "depth_in": 29,
+        "height_min_in": 29.4,
+        "height_max_in": 48.0,
+        "weight_capacity_lb": 265,
+        "motors": 2,
+        "leg_stages": 2,
+        "warranty_years": 5,
+        "top_material": "laminate",
+        "presets": 4,
+        "cable_management": false
+      },
+      "price_cents": 44900,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 0,
+        "eta_min_days": 0,
+        "eta_max_days": 0
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 0
+      },
+      "warranty": {
+        "duration_months": 60,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": false
+    },
+    {
+      "product_id": "D09",
+      "brand": "UPLIFT",
+      "title": "UPLIFT V2 (42x30 laminate)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 42,
+        "depth_in": 30,
+        "height_min_in": 25.3,
+        "height_max_in": 50.9,
+        "weight_capacity_lb": 355,
+        "motors": 2,
+        "leg_stages": 3,
+        "warranty_years": 15,
+        "top_material": "laminate",
+        "presets": 2,
+        "cable_management": true,
+        "noise_db": 56
+      },
+      "price_cents": 59900,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 0,
+        "eta_min_days": 0,
+        "eta_max_days": 0
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 0
+      },
+      "warranty": {
+        "duration_months": 180,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": false
+    },
+    {
+      "product_id": "D10",
+      "brand": "Secretlab",
+      "title": "Secretlab MAGNUS Pro (70x31.5)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 70,
+        "depth_in": 31.5,
+        "height_min_in": 25.0,
+        "height_max_in": 48.4,
+        "weight_capacity_lb": 265,
+        "motors": 2,
+        "leg_stages": 2,
+        "warranty_years": 5,
+        "top_material": "laminate",
+        "presets": 4,
+        "cable_management": true,
+        "noise_db": 50
+      },
+      "price_cents": 94900,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 0,
+        "eta_min_days": 0,
+        "eta_max_days": 0
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 0
+      },
+      "warranty": {
+        "duration_months": 60,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": false
+    },
+    {
+      "product_id": "D11",
+      "brand": "Ergonofis",
+      "title": "Ergonofis Sway (60x30 solid wood)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 60,
+        "depth_in": 30,
+        "height_min_in": 24.5,
+        "height_max_in": 50.0,
+        "weight_capacity_lb": 300,
+        "motors": 2,
+        "leg_stages": 3,
+        "warranty_years": 10,
+        "top_material": "solid_ash",
+        "presets": 4,
+        "cable_management": true
+      },
+      "price_cents": 129500,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 0,
+        "eta_min_days": 0,
+        "eta_max_days": 0
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 0
+      },
+      "warranty": {
+        "duration_months": 120,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": false
+    },
+    {
+      "product_id": "D12",
+      "brand": "Arbor",
+      "title": "Arbor Ridge 55 (55x28 bamboo)",
+      "category": "standing_desk",
+      "attributes": {
+        "width_in": 55,
+        "depth_in": 28,
+        "height_min_in": 25.0,
+        "height_max_in": 51.0,
+        "weight_capacity_lb": 285,
+        "motors": 2,
+        "leg_stages": 3,
+        "warranty_years": 6,
+        "top_material": "bamboo",
+        "presets": 3,
+        "cable_management": true,
+        "noise_db": 48
+      },
+      "price_cents": 57900,
+      "availability": "in_stock",
+      "shipping": {
+        "price_cents": 7900,
+        "eta_min_days": 12,
+        "eta_max_days": 24
+      },
+      "returns": {
+        "window_days": 30,
+        "fee_cents": 12900
+      },
+      "warranty": {
+        "duration_months": 72,
+        "type": "limited"
+      },
+      "promotion": null,
+      "is_merchant_product": true
+    }
+  ]
+}

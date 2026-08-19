@@ -4,12 +4,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from acop._seed_catalog import MERCHANT_PRODUCT_ID, build_catalog
+from acop.catalog import PLACEHOLDER_FOCAL_ID as MERCHANT_PRODUCT_ID, placeholder_catalog as build_catalog
 from acop.adapters import SimulatedAgentAdapter
 from acop.interventions import release_0_set
 from acop.mandates import build_mandate_set
 from acop.pipeline import run_pipeline
-from scripts.run_simulated import demo_economics
+from scripts.run_simulated import demo_economics as _demo_econ
+demo_economics = lambda: _demo_econ(62900)
 
 
 def test_pipeline_produces_all_artifacts(tmp_path: Path) -> None:

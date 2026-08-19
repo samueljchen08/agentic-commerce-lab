@@ -18,7 +18,7 @@ from .economics import ChannelScope, InterventionEconomics
 Arm = tuple[Intervention, InterventionEconomics]
 
 
-def release_0_set(focal: ProductState, expedited_upgrade_cents: int = 900) -> list[Arm]:
+def release_0_set(focal: ProductState) -> list[Arm]:
     """The Release 0 arms.
 
     Deliberately spans all three channel scopes so the economic engine can
@@ -57,16 +57,20 @@ def release_0_set(focal: ProductState, expedited_upgrade_cents: int = 900) -> li
         Intervention(
             intervention_id="int_agent_sla",
             type=InterventionType.SHIPPING,
-            label="Expose existing 2-day delivery SLA in agent feed",
+            label="Expose existing 7-day delivery SLA in agent feed",
             target_product_ids=[fid],
-            patch={"shipping.eta_min_days": 1, "shipping.eta_max_days": 2},
+            patch={"shipping.eta_min_days": 5, "shipping.eta_max_days": 7},
         ),
         InterventionEconomics(
             channel_scope=ChannelScope.AGENT_ONLY,
-            direct_cost_cents_per_order=expedited_upgrade_cents,
+            # ZERO. This arm exposes an SLA the merchant ALREADY meets; the
+            # feed simply understates it. Charging a freight-upgrade cost here
+            # would be modelling a different intervention (buying faster
+            # fulfilment), which belongs in its own arm.
+            direct_cost_cents_per_order=0,
             conversion_multiplier=1.0,
             operational_requirements=(
-                "fulfilment must genuinely meet a 2-day SLA for agent-sourced orders",
+                "fulfilment must genuinely meet a 5-7 day SLA for agent-sourced orders",
                 "SLA must already be true — never publish a delivery promise you cannot keep",
             ),
         ),
@@ -75,7 +79,8 @@ def release_0_set(focal: ProductState, expedited_upgrade_cents: int = 900) -> li
     # --- 3. Structured attribute completion --------------------------------
     # Only exposes facts already true of the product. Never fabricate.
     completed = dict(focal.attributes)
-    completed.setdefault("carry_on_compliant", True)
+    for k in ("presets", "cable_management", "noise_db", "leg_stages"):
+        completed.setdefault(k, focal.attributes.get(k))
     arms.append((
         Intervention(
             intervention_id="int_feed_attributes",
@@ -134,7 +139,7 @@ def representation_arms(focal: ProductState) -> list[Arm]:
                 type=InterventionType.ATTRIBUTE_DATA,
                 label="SLA in structured shipping field",
                 target_product_ids=[fid],
-                patch={"shipping.eta_min_days": 1, "shipping.eta_max_days": 2},
+                patch={"shipping.eta_min_days": 5, "shipping.eta_max_days": 7},
             ),
             econ,
         ),
@@ -145,7 +150,7 @@ def representation_arms(focal: ProductState) -> list[Arm]:
                 label="SLA in product copy only",
                 target_product_ids=[fid],
                 patch={"attributes": {**focal.attributes,
-                                      "shipping_note": "Ships in 1-2 business days"}},
+                                      "shipping_note": "Ships in 5-7 business days"}},
             ),
             econ,
         ),
