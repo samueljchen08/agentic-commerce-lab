@@ -115,11 +115,16 @@ def run_pipeline(
         estimates[iv.intervention_id] = estimate_effect(
             run, "control", iv.intervention_id, iv.label, rng=rng
         )
-    any_e = next(iter(estimates.values()))
+    # Control-only (smoke) runs have zero arms. Baseline diagnostics — selection
+    # rate, ICC, effective n — must still be reportable, so fall back to a
+    # control-vs-control comparison purely for those shared fields.
+    any_e = next(iter(estimates.values())) if estimates else estimate_effect(
+        run, "control", "control", "control", rng=rng
+    )
 
-    top_id = max(estimates, key=lambda k: estimates[k].effect_pp)
+    top_id = max(estimates, key=lambda k: estimates[k].effect_pp) if estimates else None
     sensitivity = (
-        prompt_sensitivity(run, "control", top_id) if prompt_variants > 1 else {}
+        prompt_sensitivity(run, "control", top_id) if prompt_variants > 1 and top_id else {}
     )
 
     # ---- economics

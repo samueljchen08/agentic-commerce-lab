@@ -48,7 +48,7 @@ class AnthropicBuyerAdapter:
         pricing: ProviderPricing,
         store: ArtifactStore,
         temperature: float = 1.0,
-        max_tokens: int = 200,
+        max_tokens: int = 300,
         diagnostic_rate: float = 0.07,
         max_retries: int = 3,
     ):
@@ -91,6 +91,17 @@ class AnthropicBuyerAdapter:
                     max_tokens=self.max_tokens if not diagnostic else self.max_tokens + 300,
                     temperature=self.temperature,
                     system=SYSTEM_PROMPT,
+                    # Claude 5-family models (incl. claude-sonnet-5) run adaptive
+                    # thinking by default. Explicitly disabling it (tried first)
+                    # backfires on harder filtering problems: with nowhere to
+                    # think internally, the model sometimes reasons in the open —
+                    # writes prose straight into the visible response — and that
+                    # competes with the JSON answer for max_tokens (8/20 real
+                    # probes were truncated mid-reasoning). Leaving thinking on
+                    # at low effort keeps hard reasoning off-budget internally so
+                    # the visible output stays a short, clean JSON object, which
+                    # is what happened on every probe that had thinking room.
+                    output_config={"effort": "low"},
                     messages=[{"role": "user", "content": user_msg}],
                 )
                 elapsed = time.time() - started
