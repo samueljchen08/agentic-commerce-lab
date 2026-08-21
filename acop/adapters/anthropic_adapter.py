@@ -48,7 +48,7 @@ class AnthropicBuyerAdapter:
         pricing: ProviderPricing,
         store: ArtifactStore,
         temperature: float = 1.0,
-        max_tokens: int = 300,
+        max_tokens: int = 600,
         diagnostic_rate: float = 0.07,
         max_retries: int = 3,
     ):
@@ -101,6 +101,13 @@ class AnthropicBuyerAdapter:
                     # at low effort keeps hard reasoning off-budget internally so
                     # the visible output stays a short, clean JSON object, which
                     # is what happened on every probe that had thinking room.
+                    # 300 tokens still wasn't enough headroom: a 60-mandate real
+                    # run (slice_release0_60m_v4) hit the 300-token ceiling on
+                    # 12/300 probes (4%), each with output_tokens==300 and either
+                    # an empty or mid-JSON-truncated response_text — thinking ran
+                    # long on the harder mandates and left nothing for the visible
+                    # answer. Bumped to 600; re-check parser_quality_pass after
+                    # every run and raise further if truncation reappears.
                     output_config={"effort": "low"},
                     messages=[{"role": "user", "content": user_msg}],
                 )

@@ -1,0 +1,52 @@
+
+  catalog   12 products, focal Arbor Arbor Ridge 48 (48x24 bamboo)
+  mandates  60 across 7 segments
+  design    5 arm(s) x 1 rep(s) = 300 probes
+  model     claude-sonnet-5
+
+==================================================================
+  COST PREFLIGHT — OK
+==================================================================
+  probes                300
+  tokens per probe      4,115 in / 90 out
+  total tokens          1,234,500 in / 27,000 out
+  price                 $2.0/Mtok in, $10.0/Mtok out
+  cost per probe        $0.0091
+  PROJECTED TOTAL       $2.74
+  budget                $25.00
+==================================================================
+  dispatching 300 probes via anthropic...
+    ... 0/300 probes
+
+  dispatched 300 | reused from disk 0 | actual cost $2.85 (projected $2.74)
+
+==============================================================================
+  slice_release0_60m_v5   [E1a_CONTROLLED_LAB_SINGLE_PROVIDER]
+==============================================================================
+  provider anthropic / claude-sonnet-5
+  60 mandates x 1 reps x 5 arms = 300 probes
+  cost $2.85  (1,236,987 in / 37,364 out tokens)
+
+  SELECTION EFFECTS
+    Free standard shipping (all channels)             +1.69 pp [ +0.04,  +6.22]  P(>0)=1.000
+    Expose existing 7-day delivery SLA in agent feed  -0.00 pp [ -4.85,  +5.00]  P(>0)=0.502
+    Complete structured attributes in agent feed      +0.02 pp [ -4.94,  +5.02]  P(>0)=0.502
+    Cut list price 5% ($474)                          +0.00 pp [ +0.00,  +0.00]  P(>0)=0.000
+
+    baseline selection rate : 0.050
+    ICC / design effect     : 0.000 / 1.00
+    effective n per arm     : 60 (of 60 probes)
+
+  RANKED ACTIONS  (modeled contribution, all channels)
+    [PROMISING             ] Do nothing                                     $           0
+    [INCONCLUSIVE          ] Complete structured attributes in agent feed   $      -8,966
+         agent gain $-8,966  cannibalized $10,778  non-agent $0  P(>0) 0.50
+    [INCONCLUSIVE          ] Expose existing 7-day delivery SLA in agent feed $     -10,309
+         agent gain $-10,309  cannibalized $11,106  non-agent $0  P(>0) 0.50
+    [REJECTED_VALUE        ] Free standard shipping (all channels)          $    -188,718
+         agent gain $-10,118  cannibalized $30,082  non-agent $-178,600  P(>0) 0.00
+    [REJECTED_VALUE        ] Cut list price 5% ($474)                       $    -236,982
+         agent gain $-32,952  cannibalized $3,333  non-agent $-204,030  P(>0) 0.00
+
+  artifacts -> /Users/sam/code/ventures/agentic-commerce-lab/artifacts
+

@@ -1,0 +1,1026 @@
+<title>The Wedge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --paper: #eceee7;
+    --paper-2: #e3e6dd;
+    --surface: #fbfbf8;
+    --ink: #181b16;
+    --ink-soft: #53584c;
+    --ink-faint: #868c7c;
+    --rule: #c7cabe;
+    --rule-strong: #a6a999;
+    --teal: #1c6e63;
+    --teal-tint: #dbe8e4;
+    --brass: #93712f;
+    --brass-tint: #ece2c9;
+    --rust: #a23b2e;
+    --rust-tint: #f3ded9;
+    --moss: #3f7a3d;
+    --moss-tint: #dde8d8;
+    --shadow: 0 1px 2px rgba(24,27,22,0.06), 0 8px 24px rgba(24,27,22,0.05);
+    --font-display: "Fraunces", ui-serif, Georgia, serif;
+    --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #14150f;
+      --paper-2: #1b1c15;
+      --surface: #1e2018;
+      --ink: #eceee5;
+      --ink-soft: #b7bba9;
+      --ink-faint: #7d8271;
+      --rule: #383b2e;
+      --rule-strong: #4c503e;
+      --teal: #6fbfae;
+      --teal-tint: #1e3330;
+      --brass: #d3ab5c;
+      --brass-tint: #332c19;
+      --rust: #e08b7d;
+      --rust-tint: #3a231f;
+      --moss: #8fc182;
+      --moss-tint: #263420;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 28px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14150f;
+    --paper-2: #1b1c15;
+    --surface: #1e2018;
+    --ink: #eceee5;
+    --ink-soft: #b7bba9;
+    --ink-faint: #7d8271;
+    --rule: #383b2e;
+    --rule-strong: #4c503e;
+    --teal: #6fbfae;
+    --teal-tint: #1e3330;
+    --brass: #d3ab5c;
+    --brass-tint: #332c19;
+    --rust: #e08b7d;
+    --rust-tint: #3a231f;
+    --moss: #8fc182;
+    --moss-tint: #263420;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 28px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  a { color: var(--teal); }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 48px);
+  }
+
+  /* ---------- top strip ---------- */
+  .topstrip {
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+  .topstrip .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .topstrip strong { color: var(--ink-soft); font-weight: 500; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: clamp(48px, 8vw, 88px) 0 56px; }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 22px; height: 1px;
+    background: var(--teal);
+    display: inline-block;
+  }
+  h1.thesis {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 22px;
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+  h1.thesis em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--rust);
+  }
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0 0 28px;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    max-width: 640px;
+  }
+  .hero-stat {
+    background: var(--surface);
+    padding: 14px 16px;
+  }
+  .hero-stat .n {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    display: block;
+  }
+  .hero-stat .l {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin-top: 2px;
+    display: block;
+  }
+  .hero-stat.neg .n { color: var(--rust); }
+  .hero-stat.pos .n { color: var(--moss); }
+
+  /* ---------- section scaffolding ---------- */
+  section.block {
+    padding: 56px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .sec-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+  }
+  h2.sec-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 2.05rem);
+    margin: 4px 0 14px;
+    text-wrap: balance;
+  }
+  .sec-lede {
+    color: var(--ink-soft);
+    max-width: 66ch;
+    margin: 0 0 30px;
+    font-size: 1.02rem;
+  }
+  .evidence-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    padding: 3px 9px;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+  }
+  .evidence-tag.e0 { color: var(--brass); background: var(--brass-tint); }
+  .evidence-tag.e1 { color: var(--teal); background: var(--teal-tint); }
+
+  /* ---------- wedge chart (section 1) ---------- */
+  .wedge-chart {
+    display: grid;
+    gap: 14px;
+    margin: 8px 0 28px;
+  }
+  .wedge-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 140px;
+    align-items: center;
+    gap: 16px;
+  }
+  @media (max-width: 640px) {
+    .wedge-row { grid-template-columns: 1fr; gap: 6px; }
+    .wedge-row .barpair { order: 2; }
+    .wedge-row .val { order: 3; text-align: left !important; }
+  }
+  .wedge-row .label { font-size: 0.92rem; color: var(--ink); }
+  .wedge-row .label .sub { display: block; font-size: 11.5px; color: var(--ink-faint); font-family: var(--font-mono); margin-top: 2px;}
+  .barpair { display: flex; flex-direction: column; gap: 5px; }
+  .bar-track { position: relative; height: 15px; background: var(--paper-2); border-radius: 2px; overflow: hidden; }
+  .bar-fill { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 2px; }
+  .bar-fill.ghost { background: repeating-linear-gradient(135deg, var(--ink-faint), var(--ink-faint) 3px, transparent 3px, transparent 6px); opacity: 0.55; }
+  .bar-fill.money-pos { background: var(--moss); }
+  .bar-fill.money-neg { background: var(--rust); }
+  .bar-caption { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-faint); display: flex; justify-content: space-between; }
+  .val { font-family: var(--font-mono); font-weight: 600; font-size: 1.05rem; text-align: right; font-variant-numeric: tabular-nums; }
+  .val.money-pos { color: var(--moss); }
+  .val.money-neg { color: var(--rust); }
+
+  .callout {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--teal);
+    padding: 16px 20px;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    margin: 20px 0;
+  }
+  .callout.warn { border-left-color: var(--rust); }
+  .callout strong { color: var(--ink); }
+
+  /* ---------- ranked table ---------- */
+  table.ranked {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    margin: 18px 0;
+  }
+  table.ranked th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    border-bottom: 1px solid var(--rule-strong);
+    padding: 0 10px 8px 0;
+    font-weight: 500;
+  }
+  table.ranked td {
+    padding: 11px 10px 11px 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  table.ranked td.num { font-family: var(--font-mono); text-align: right; font-variant-numeric: tabular-nums; }
+  .overflow-x { overflow-x: auto; }
+
+  .pill {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.02em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .pill.RECOMMENDED { background: var(--moss-tint); color: var(--moss); }
+  .pill.PROMISING { background: var(--teal-tint); color: var(--teal); }
+  .pill.INCONCLUSIVE { background: var(--brass-tint); color: var(--brass); }
+  .pill.REJECTED_VALUE, .pill.REJECTED_RISK { background: var(--rust-tint); color: var(--rust); }
+
+  /* ---------- run comparison (section 2) ---------- */
+  .run-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 8px 0 24px;
+  }
+  @media (max-width: 720px) { .run-grid { grid-template-columns: 1fr; } }
+  .run-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: 20px 22px;
+  }
+  .run-card h3 {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    margin: 0 0 3px;
+    color: var(--ink);
+  }
+  .run-card .meta { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); margin-bottom: 16px; }
+  .arm-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 0;
+    border-top: 1px solid var(--rule);
+    font-size: 0.88rem;
+  }
+  .arm-line:first-of-type { border-top: none; }
+  .arm-line .n { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+  .arm-line.winner .name { color: var(--moss); font-weight: 600; }
+  .arm-line.winner .n { color: var(--moss); font-weight: 600; }
+
+  /* ---------- instrument (section 3) ---------- */
+  .instrument {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: clamp(20px, 4vw, 32px);
+  }
+  .instr-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 18px 24px;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 7px;
+  }
+  select {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    padding: 8px 10px;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+  }
+  .slider-field .row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+  .slider-field .row label { margin: 0; }
+  .slider-field .row .live {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teal);
+    font-variant-numeric: tabular-nums;
+  }
+  input[type="range"] {
+    width: 100%;
+    accent-color: var(--teal);
+    height: 4px;
+  }
+  .slider-field .range-caption { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); margin-top: 4px; }
+  .slider-field.disabled { opacity: 0.4; pointer-events: none; }
+
+  .instr-body { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; }
+  @media (max-width: 780px) { .instr-body { grid-template-columns: 1fr; } }
+
+  .waterfall { display: grid; gap: 3px; }
+  .wf-step {
+    display: grid;
+    grid-template-columns: 150px 1fr 110px;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.85rem;
+  }
+  .wf-step .wf-label { color: var(--ink-soft); }
+  .wf-step .wf-bar-track { position: relative; height: 10px; background: var(--paper-2); }
+  .wf-step .wf-bar { position: absolute; top: 0; bottom: 0; }
+  .wf-step .wf-val { font-family: var(--font-mono); text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+  .wf-step.total { border-bottom: none; border-top: 2px solid var(--ink); margin-top: 4px; padding-top: 14px; }
+  .wf-step.total .wf-label { font-weight: 600; color: var(--ink); }
+  .wf-step.total .wf-val { font-size: 1.05rem; font-weight: 700; }
+
+  .status-readout { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--rule); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .stat-block { }
+  .stat-block .n { font-family: var(--font-mono); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stat-block .l { font-size: 11px; color: var(--ink-faint); }
+
+  .side-panel { display: flex; flex-direction: column; gap: 20px; }
+  .measured-box, .breakeven-box {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 16px 18px;
+  }
+  .measured-box h4, .breakeven-box h4 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 12px;
+  }
+  .kv { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 5px 0; }
+  .kv .k { color: var(--ink-soft); }
+  .kv .v { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 500; }
+  .breakeven-box .headline { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; margin: 4px 0 8px; }
+  .breakeven-box .note { font-size: 0.82rem; color: var(--ink-faint); }
+
+  /* ---------- ledger table (section 4) ---------- */
+  table.ledger { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  table.ledger th {
+    text-align: left; font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--ink-faint); border-bottom: 1px solid var(--rule-strong);
+    padding: 0 12px 8px 0; font-weight: 500;
+  }
+  table.ledger td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); }
+  table.ledger td:first-child { font-weight: 500; }
+  .status-chip {
+    font-family: var(--font-mono); font-size: 10px; padding: 2px 7px; border-radius: 3px; white-space: nowrap;
+  }
+  .status-chip.SYNTHETIC { background: var(--brass-tint); color: var(--brass); }
+  .status-chip.ASSUMED { background: var(--rust-tint); color: var(--rust); }
+  .status-chip.OBSERVED, .status-chip.MEASURED { background: var(--teal-tint); color: var(--teal); }
+  .sens { font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); }
+
+  /* ---------- footer ---------- */
+  footer { padding: 48px 0 64px; border-top: 1px solid var(--rule); }
+  .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; margin: 24px 0 36px; }
+  .rule-item { font-size: 0.85rem; color: var(--ink-soft); }
+  .rule-item strong { display: block; color: var(--ink); font-size: 0.86rem; margin-bottom: 4px; }
+  .meta-strip { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); display: flex; flex-wrap: wrap; gap: 8px 22px; padding-top: 20px; border-top: 1px solid var(--rule); }
+  .meta-strip b { color: var(--ink-soft); font-weight: 500; }
+</style>
+
+<div class="topstrip">
+  <div class="wrap">
+    <span>Agentic Commerce Lab &middot; Merchant Decision System</span>
+    <span><strong>Focal:</strong> Arbor Ridge 48 &middot; <strong>Catalog:</strong> v1, 11 real + 1 fictional, checkout-verified</span>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">The Wedge</p>
+    <h1 class="thesis">The biggest AI&#8209;visibility win is <em>often the worst action on the board.</em></h1>
+    <p class="hero-sub">
+      AI buyer agents compare a merchant against a frozen competitive set and choose one. This system runs
+      controlled experiments on that choice, then runs the winning lever through real unit economics before
+      it ever reaches a to-do list &mdash; because most levers can't be scoped to the ~3% of demand agents
+      actually mediate. Below: a controlled demonstration of that gap, then two live runs against real Claude
+      Sonnet&nbsp;5 on a real, source-verified catalog.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat neg">
+        <span class="n">+8.68pp</span>
+        <span class="l">agent-choice lift, free shipping</span>
+      </div>
+      <div class="hero-stat neg">
+        <span class="n">&minus;$883,432</span>
+        <span class="l">what that lift actually costs</span>
+      </div>
+      <div class="hero-stat pos">
+        <span class="n">$384,617</span>
+        <span class="l">the lever that actually wins</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ SECTION 1 -->
+<section class="block" id="wedge">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="sec-num">01 &mdash; The demonstration</p>
+        <h2 class="sec-title">Agent-choice lift vs. modeled dollar value</h2>
+      </div>
+      <span class="evidence-tag e0">E0 &middot; SYNTHETIC SYSTEM CHECK</span>
+    </div>
+    <p class="sec-lede">
+      A controlled run on a simulated oracle &mdash; 150 mandates &times; 3 replications &times; 5 arms,
+      2,250 probes, baseline selection rate 12.0%, ICC 0.013. Large enough to resolve every effect cleanly.
+      This is a pipeline validation and a demonstration of the mechanism, not a merchant fact &mdash; real
+      numbers are in Section 02.
+    </p>
+
+    <div class="wedge-chart" id="wedge-chart"><!-- filled by JS --></div>
+
+    <div class="callout warn">
+      <strong>Free shipping produces the largest agent-choice lift and the largest loss.</strong>
+      It is a <em>global</em> lever &mdash; it discounts every non-agent order too, and agents mediate only
+      about 3% of this merchant's comparisons. The dollar model charges that exposure; a tool that only
+      reports selection lift would recommend it anyway.
+    </div>
+
+    <div class="overflow-x">
+      <table class="ranked">
+        <thead>
+          <tr><th>Action</th><th>Status</th><th>Selection effect</th><th>Modeled contribution</th></tr>
+        </thead>
+        <tbody id="wedge-table"><!-- filled by JS --></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ SECTION 2 -->
+<section class="block" id="realworld">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="sec-num">02 &mdash; Real-world validation</p>
+        <h2 class="sec-title">Two live runs, same spec, different winner</h2>
+      </div>
+      <span class="evidence-tag e1">E1a &middot; CONTROLLED LAB, SINGLE PROVIDER</span>
+    </div>
+    <p class="sec-lede">
+      Two independent runs against live <code>claude-sonnet-5</code>, identical Arbor pricing, identical
+      checkout-verified 12-product catalog, 60 mandates &times; 5 arms &times; 1 replication (300 real probes,
+      ~$2.85 each). They disagree on which lever wins.
+    </p>
+
+    <div class="run-grid" id="run-grid"><!-- filled by JS --></div>
+
+    <div class="callout">
+      <strong>This disagreement is the finding, not a bug.</strong> Both runs sit near a 5&ndash;7% baseline
+      &mdash; 3 to 5 buyers out of 60 choosing Arbor at all. A single mandate flipping its answer swings an
+      entire arm from a confident winner to statistical noise. Run <b>v4</b> also predates a token-budget fix:
+      12 of its 300 probes hit the output ceiling mid-answer and were correctly dropped, never guessed &mdash;
+      <b>v5</b> is fully clean (0 of 300 dropped). Neither run is wrong; at n=60 the ranking simply isn't
+      stable yet, which is exactly why the system reports a probability of a positive effect rather than a
+      single number. More mandates, not more replications of the same ones, is what resolves it &mdash;
+      see the assumptions ledger in Section 04.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ SECTION 3 -->
+<section class="block" id="instrument-section">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="sec-num">03 &mdash; Explore the assumptions</p>
+        <h2 class="sec-title">The economics bridge, live</h2>
+      </div>
+    </div>
+    <p class="sec-lede">
+      Every dollar figure above depends on inputs no probe measures &mdash; conversion, cannibalization,
+      price elasticity. Pick a run and a lever, then move the sliders to see how the verdict moves. The
+      bridge below is the same formula the ranking engine runs: gross agent-side gain, minus what would have
+      converted anyway, minus (or plus) the cost that lever imposes on customers agents never touched.
+    </p>
+
+    <div class="instrument">
+      <div class="instr-controls">
+        <div class="field">
+          <label for="sel-run">Run</label>
+          <select id="sel-run">
+            <option value="v4">v4 &middot; 2026-08-21 00:47</option>
+            <option value="v5" selected>v5 &middot; 2026-08-21 01:09 (clean)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="sel-arm">Lever</label>
+          <select id="sel-arm"></select>
+        </div>
+        <div class="field slider-field">
+          <div class="row"><label for="sl-conv">Post-selection conversion</label><span class="live" id="lv-conv">55%</span></div>
+          <input type="range" id="sl-conv" min="42" max="68" value="55" step="1">
+          <div class="range-caption"><span>42% (low)</span><span>68% (high)</span></div>
+        </div>
+        <div class="field slider-field">
+          <div class="row"><label for="sl-kappa">Cannibalization</label><span class="live" id="lv-kappa">30%</span></div>
+          <input type="range" id="sl-kappa" min="0" max="55" value="30" step="1">
+          <div class="range-caption"><span>0% (none)</span><span>55% (heavy)</span></div>
+        </div>
+        <div class="field slider-field" id="eps-field">
+          <div class="row"><label for="sl-eps">Non-agent price elasticity</label><span class="live" id="lv-eps">0.75</span></div>
+          <input type="range" id="sl-eps" min="0" max="150" value="75" step="5">
+          <div class="range-caption"><span>0.0 (inelastic)</span><span>1.5 (elastic)</span></div>
+        </div>
+      </div>
+
+      <div class="instr-body">
+        <div>
+          <div class="waterfall" id="waterfall"><!-- filled by JS --></div>
+          <div class="status-readout">
+            <span class="pill" id="live-status">&nbsp;</span>
+            <div class="stat-block"><span class="n" id="live-status-reason"></span></div>
+          </div>
+        </div>
+        <div class="side-panel">
+          <div class="measured-box">
+            <h4>Measured, this run</h4>
+            <div id="measured-kv"><!-- filled by JS --></div>
+          </div>
+          <div class="breakeven-box" id="breakeven-box">
+            <h4>Breakeven channel share</h4>
+            <div class="headline" id="breakeven-headline">&mdash;</div>
+            <p class="note" id="breakeven-note"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ SECTION 4 -->
+<section class="block" id="ledger">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="sec-num">04 &mdash; Assumptions ledger</p>
+        <h2 class="sec-title">Every number that isn't a lab measurement</h2>
+      </div>
+    </div>
+    <p class="sec-lede">
+      The selection effects above are measured. The dollar translation depends on merchant-scenario inputs
+      that are illustrative for this demo catalog and would come from the merchant's own systems in a real
+      engagement &mdash; each is tagged with its evidence status and how much it can move the verdict.
+    </p>
+    <div class="overflow-x">
+      <table class="ledger">
+        <thead><tr><th>Input</th><th>Value</th><th>Status</th><th>Source</th><th>Sensitivity</th></tr></thead>
+        <tbody id="ledger-table"><!-- filled by JS --></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h2 class="sec-title" style="font-size:1.3rem;">Reading this correctly</h2>
+    <div class="rules-grid">
+      <div class="rule-item"><strong>A lab effect is not a real-world lift.</strong>Section 01 validates the pipeline on a synthetic oracle. Sections 02&ndash;03 are the real-world attempt, and it is visibly unfinished &mdash; that is disclosed, not hidden.</div>
+      <div class="rule-item"><strong>Synthetic economics are not merchant economics.</strong>Section 04 tags every input the ranking depends on that this catalog does not actually measure.</div>
+      <div class="rule-item"><strong>Unresolved is not "no."</strong>Probes the parser can't confidently read are dropped, never coerced into an answer &mdash; visible in the v4/v5 comparison.</div>
+      <div class="rule-item"><strong>"Do nothing" stays on the board.</strong>It is a real, always-available action, ranked alongside every intervention, not a footnote.</div>
+    </div>
+    <div class="meta-strip">
+      <span><b>Model:</b> claude-sonnet-5</span>
+      <span><b>Provider:</b> Anthropic</span>
+      <span><b>Catalog hash:</b> 63b09393f09ebe0d</span>
+      <span><b>v4 cost:</b> $2.83 / 300 probes</span>
+      <span><b>v5 cost:</b> $2.85 / 300 probes</span>
+      <span><b>Sim cost:</b> $0 (local oracle)</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================= DATA */
+
+  // E0 synthetic oracle reference run (make sim) — static, not slider-driven.
+  var wedge = [
+    { label: "Free standard shipping (all channels)", pp: 8.68, ci: [4.15,13.41], status:"REJECTED_VALUE", dollars: -883432 },
+    { label: "Expose existing 7-day delivery SLA in agent feed", pp: 10.99, ci: [6.07,16.28], status:"RECOMMENDED", dollars: 384617 },
+    { label: "Complete structured attributes in agent feed", pp: 2.71, ci: [-1.21,6.74], status:"RECOMMENDED", dollars: 93851 },
+    { label: "Cut list price 5% ($550)", pp: 2.04, ci: [-1.86,6.03], status:"INCONCLUSIVE", dollars: -237060 },
+    { label: "Do nothing", pp: 0, ci: [0,0], status:"PROMISING", dollars: 0 }
+  ];
+
+  // merchant economics shared across every real run (identical Arbor spec).
+  var econ = {
+    cogs: 30500, fulfillment: 7400, paymentBps: 290, returnRate: 0.06, returnCost: 21000,
+    displacedCM: 17100, nCmp: 52000, nNon: 9400,
+    priceCents: 49900
+  };
+
+  // per-intervention config (from acop/interventions.py, release_0_set)
+  var arms = {
+    int_free_shipping: { label: "Free standard shipping (all channels)", scope: "global", subsidy: 1900, convMult: 1.08, pricePct: 0 },
+    int_agent_sla:     { label: "Expose existing 7-day delivery SLA in agent feed", scope: "agent_only", subsidy: 0, convMult: 1.0, pricePct: 0 },
+    int_feed_attributes: { label: "Complete structured attributes in agent feed", scope: "agent_only", subsidy: 0, convMult: 1.0, pricePct: 0 },
+    int_price_5: { label: "Cut list price 5% ($474)", scope: "global", subsidy: 0, convMult: 1.05, pricePct: (47400-49900)/49900 }
+  };
+  var armOrder = ["int_free_shipping","int_agent_sla","int_feed_attributes","int_price_5"];
+
+  // real run measurements, pulled from artifacts/{effects,economics}.json for each run.
+  var runs = {
+    v4: {
+      label: "v4", started: "2026-08-21 00:47 UTC", cost: 2.83, cleanProbes: "288 / 300 (12 dropped, pre-fix truncation)",
+      control: { sel: 4, n: 60 },
+      arm: {
+        int_free_shipping:   { sel: 4, n: 60, pEffectPos: 0.000 },
+        int_agent_sla:       { sel: 4, n: 60, pEffectPos: 0.000 },
+        int_feed_attributes: { sel: 5, n: 60, pEffectPos: 1.000 },
+        int_price_5:         { sel: 3, n: 60, pEffectPos: 0.000 }
+      },
+      winner: "int_feed_attributes"
+    },
+    v5: {
+      label: "v5", started: "2026-08-21 01:09 UTC", cost: 2.85, cleanProbes: "300 / 300 (0 dropped)",
+      control: { sel: 3, n: 60 },
+      arm: {
+        int_free_shipping:   { sel: 4, n: 60, pEffectPos: 1.000 },
+        int_agent_sla:       { sel: 3, n: 60, pEffectPos: 0.502 },
+        int_feed_attributes: { sel: 3, n: 60, pEffectPos: 0.502 },
+        int_price_5:         { sel: 3, n: 60, pEffectPos: 0.000 }
+      },
+      winner: "int_free_shipping"
+    }
+  };
+
+  var ledgerRows = [
+    { name: "Agent comparison events / yr", value: "52,000", status: "SYNTHETIC", source: "demo scenario", sensitivity: "high" },
+    { name: "Non-agent orders / yr", value: "9,400", status: "SYNTHETIC", source: "demo scenario", sensitivity: "high" },
+    { name: "Post-selection conversion", value: "55% (swept 42%–68%)", status: "ASSUMED", source: "demo prior", sensitivity: "high" },
+    { name: "Cannibalization", value: "30% (swept 0%–55%)", status: "ASSUMED", source: "demo prior", sensitivity: "high" },
+    { name: "COGS", value: "$305.00", status: "SYNTHETIC", source: "illustrative", sensitivity: "medium" },
+    { name: "Fulfillment", value: "$74.00", status: "SYNTHETIC", source: "illustrative", sensitivity: "low" },
+    { name: "Return rate", value: "6.0%", status: "SYNTHETIC", source: "illustrative", sensitivity: "low" },
+    { name: "Non-agent price elasticity", value: "swept 0.0–1.5", status: "ASSUMED", source: "demo prior", sensitivity: "high" },
+    { name: "Competitor checkout fields (44)", value: "shipping cost, lead time, return fee × 11", status: "OBSERVED", source: "checkout pages, ZIP 60614, checked 2026-08-18/21", sensitivity: "high" },
+    { name: "Focal merchant (Arbor)", value: "price $499, 15yr warranty, 360lb", status: "SYNTHETIC", source: "fictional design partner", sensitivity: "high" }
+  ];
+
+  /* ============================================================= HELPERS */
+
+  function fmtUSD(cents, opts) {
+    opts = opts || {};
+    var v = cents / 100;
+    var neg = v < 0;
+    var s = Math.abs(v).toLocaleString("en-US", { maximumFractionDigits: 0 });
+    return (neg ? "−$" : (opts.plus ? "+$" : "$")) + s;
+  }
+  function fmtPP(pp, opts) {
+    opts = opts || {};
+    var s = Math.abs(pp).toFixed(2) + "pp";
+    if (pp === 0) return "0.00pp";
+    return (pp < 0 ? "−" : (opts.plus !== false ? "+" : "")) + s;
+  }
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+  function el(tag, cls, html){ var e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; }
+
+  /* ============================================================= SECTION 1: wedge chart */
+
+  (function renderWedge(){
+    var maxPP = Math.max.apply(null, wedge.map(function(w){ return Math.abs(w.pp); }));
+    var maxDollar = Math.max.apply(null, wedge.map(function(w){ return Math.abs(w.dollars); }));
+    var host = document.getElementById("wedge-chart");
+    wedge.forEach(function(w){
+      var row = el("div","wedge-row");
+      row.appendChild(el("div","label", w.label + (w.pp ? '<span class="sub">agent-choice effect</span>' : '')));
+
+      var bp = el("div","barpair");
+      var trackLift = el("div","bar-track");
+      var fillLift = el("div","bar-fill ghost");
+      fillLift.style.width = (maxPP ? (Math.abs(w.pp)/maxPP*100) : 0) + "%";
+      trackLift.appendChild(fillLift);
+      bp.appendChild(trackLift);
+      var cap1 = el("div","bar-caption", "<span>selection lift</span><span>"+fmtPP(w.pp)+"</span>");
+      bp.appendChild(cap1);
+
+      var trackDollar = el("div","bar-track");
+      var fillDollar = el("div","bar-fill " + (w.dollars<0 ? "money-neg":"money-pos"));
+      fillDollar.style.width = (maxDollar ? (Math.abs(w.dollars)/maxDollar*100) : 0) + "%";
+      trackDollar.appendChild(fillDollar);
+      bp.appendChild(trackDollar);
+      var cap2 = el("div","bar-caption", "<span>modeled contribution</span><span>"+fmtUSD(w.dollars*100)+"</span>");
+      bp.appendChild(cap2);
+
+      row.appendChild(bp);
+      row.appendChild(el("div","val " + (w.dollars<0?"money-neg":(w.dollars>0?"money-pos":"")), fmtUSD(w.dollars*100)));
+      host.appendChild(row);
+    });
+
+    var tbody = document.getElementById("wedge-table");
+    var sorted = wedge.slice().sort(function(a,b){
+      var order = {RECOMMENDED:0, PROMISING:1, INCONCLUSIVE:2, REJECTED_VALUE:3};
+      return order[a.status]-order[b.status] || b.dollars-a.dollars;
+    });
+    sorted.forEach(function(w){
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        "<td>"+w.label+"</td>" +
+        "<td><span class=\"pill "+w.status+"\">"+w.status.replace("_"," ")+"</span></td>" +
+        "<td class=\"num\">"+fmtPP(w.pp)+"</td>" +
+        "<td class=\"num "+(w.dollars<0?"money-neg":"money-pos")+"\">"+fmtUSD(w.dollars*100)+"</td>";
+      tbody.appendChild(tr);
+    });
+  })();
+
+  /* ============================================================= SECTION 2: run comparison */
+
+  (function renderRuns(){
+    var host = document.getElementById("run-grid");
+    ["v4","v5"].forEach(function(key){
+      var r = runs[key];
+      var card = el("div","run-card");
+      card.appendChild(el("h3", null, "slice_release0_60m_" + key));
+      card.appendChild(el("div","meta", r.started + " &middot; $"+r.cost.toFixed(2)+" &middot; "+r.cleanProbes));
+
+      var ctrlLine = el("div","arm-line");
+      ctrlLine.innerHTML = '<span class="name">Control (no intervention)</span><span class="n">'+r.control.sel+' / '+r.control.n+'</span>';
+      card.appendChild(ctrlLine);
+
+      armOrder.forEach(function(armId){
+        var a = r.arm[armId];
+        var line = el("div","arm-line" + (armId===r.winner ? " winner":""));
+        var tag = armId===r.winner ? " ← winner" : "";
+        line.innerHTML = '<span class="name">'+arms[armId].label+tag+'</span><span class="n">'+a.sel+' / '+a.n+' &middot; P(effect>0)='+a.pEffectPos.toFixed(3)+'</span>';
+        card.appendChild(line);
+      });
+      host.appendChild(card);
+    });
+  })();
+
+  /* ============================================================= SECTION 3: instrument */
+
+  function contributionMarginCents(priceCents, subsidyCents) {
+    var payment = Math.floor(priceCents * econ.paymentBps / 10000);
+    var expectedReturn = Math.round(econ.returnRate * econ.returnCost);
+    return priceCents - econ.cogs - econ.fulfillment - payment - subsidyCents - expectedReturn;
+  }
+
+  function bridge(sCtrl, sTrt, q, kappa, eps, armCfg) {
+    var cmCtrl = contributionMarginCents(econ.priceCents, 0);
+    var cmTrt = contributionMarginCents(econ.priceCents + Math.round(armCfg.pricePct*econ.priceCents), armCfg.subsidy);
+    var qTrt = clamp01(q * armCfg.convMult);
+
+    var ordersCtrl = econ.nCmp * sCtrl * q;
+    var ordersTrt = econ.nCmp * sTrt * qTrt;
+    var grossDelta = ordersTrt*cmTrt - ordersCtrl*cmCtrl;
+    var dOrders = ordersTrt - ordersCtrl;
+    var cannibal = Math.max(0, dOrders) * kappa * econ.displacedCM;
+    var agentGain = grossDelta - cannibal;
+
+    var nonAgent = 0;
+    if (armCfg.scope === "global") {
+      var volResponse = -eps * armCfg.pricePct;
+      var after = econ.nNon * (1+volResponse) * cmTrt;
+      var before = econ.nNon * cmCtrl;
+      nonAgent = after - before;
+    }
+    return {
+      cmCtrl: cmCtrl, cmTrt: cmTrt,
+      ordersCtrl: ordersCtrl, ordersTrt: ordersTrt,
+      grossDelta: grossDelta, cannibal: cannibal, agentGain: agentGain,
+      nonAgent: nonAgent, total: agentGain + nonAgent
+    };
+  }
+
+  function classify(total, pEffectPos) {
+    if (pEffectPos > 0.15 && pEffectPos < 0.85) {
+      return { status: "INCONCLUSIVE", reason: "selection effect not resolved (P(effect>0)="+pEffectPos.toFixed(2)+"); more mandates required" };
+    }
+    if (total < 100000) {
+      return { status: "REJECTED_VALUE", reason: "modeled contribution "+fmtUSD(total)+" below the $1,000 floor" };
+    }
+    return { status: "PROMISING", reason: "positive at these assumptions — see full Monte Carlo P(profit>0) alongside" };
+  }
+
+  function breakevenNonAgentShare(agentGain, cmCtrl, cmTrt, eps, pricePct) {
+    // Solve for the annual non-agent order volume at which total = 0, given
+    // the current agent-side gain and per-order non-agent effect, then express
+    // it as an agent-share-of-total-volume figure.
+    var perOrderEffect = (1 + (-eps*pricePct)) * cmTrt - cmCtrl;
+    if (Math.abs(perOrderEffect) < 1e-9) return null; // flat: no crossing
+    var nNonBreakeven = -agentGain / perOrderEffect;
+    return nNonBreakeven;
+  }
+
+  var selRun = document.getElementById("sel-run");
+  var selArm = document.getElementById("sel-arm");
+  var slConv = document.getElementById("sl-conv");
+  var slKappa = document.getElementById("sl-kappa");
+  var slEps = document.getElementById("sl-eps");
+
+  armOrder.forEach(function(id){
+    var opt = document.createElement("option");
+    opt.value = id; opt.textContent = arms[id].label;
+    selArm.appendChild(opt);
+  });
+  selArm.value = "int_free_shipping";
+
+  function renderInstrument(){
+    var runKey = selRun.value;
+    var armId = selArm.value;
+    var run = runs[runKey];
+    var armCfg = arms[armId];
+    var measured = run.arm[armId];
+
+    var q = +slConv.value/100, kappa = +slKappa.value/100, eps = +slEps.value/100;
+    document.getElementById("lv-conv").textContent = slConv.value+"%";
+    document.getElementById("lv-kappa").textContent = slKappa.value+"%";
+    document.getElementById("lv-eps").textContent = eps.toFixed(2);
+
+    var epsField = document.getElementById("eps-field");
+    epsField.classList.toggle("disabled", armCfg.scope !== "global");
+
+    var sCtrl = run.control.sel / run.control.n;
+    var sTrt = measured.sel / measured.n;
+
+    var b = bridge(sCtrl, sTrt, q, kappa, eps, armCfg);
+
+    var steps = [
+      { label: "Gross agent-side Δ", v: b.grossDelta, ref: b.grossDelta },
+      { label: "− Cannibalization", v: -b.cannibal, ref: b.grossDelta },
+      { label: "= Agent-channel gain", v: b.agentGain, ref: b.grossDelta, bold:true },
+    ];
+    if (armCfg.scope === "global") {
+      steps.push({ label: (b.nonAgent<0?"− ":"+ ") + "Non-agent exposure", v: b.nonAgent, ref: Math.max(Math.abs(b.grossDelta), Math.abs(b.nonAgent)) });
+    }
+    var maxAbs = Math.max.apply(null, steps.map(function(s){return Math.abs(s.v);}).concat([Math.abs(b.total)]));
+
+    var wf = document.getElementById("waterfall");
+    wf.innerHTML = "";
+    steps.forEach(function(s){
+      var row = el("div","wf-step");
+      row.appendChild(el("div","wf-label", s.label));
+      var track = el("div","wf-bar-track");
+      var fill = el("div","wf-bar " + (s.v<0?"money-neg":"money-pos"));
+      fill.style.background = s.v<0 ? "var(--rust)" : "var(--moss)";
+      var pct = maxAbs ? Math.min(100, Math.abs(s.v)/maxAbs*100) : 0;
+      fill.style.width = pct+"%";
+      if (s.v < 0) { fill.style.right = "50%"; fill.style.left = "auto"; fill.style.width = (pct/2)+"%"; }
+      else { fill.style.left = "50%"; fill.style.width = (pct/2)+"%"; }
+      track.appendChild(fill);
+      row.appendChild(track);
+      row.appendChild(el("div","wf-val " + (s.v<0?"money-neg":"money-pos"), fmtUSD(s.v)));
+      wf.appendChild(row);
+    });
+    var totalRow = el("div","wf-step total");
+    totalRow.appendChild(el("div","wf-label","= Total Δ (annual)"));
+    totalRow.appendChild(el("div"));
+    totalRow.appendChild(el("div","wf-val " + (b.total<0?"money-neg":"money-pos"), fmtUSD(b.total)));
+    wf.appendChild(totalRow);
+
+    var cls = classify(b.total, measured.pEffectPos);
+    var pill = document.getElementById("live-status");
+    pill.textContent = cls.status.replace("_"," ");
+    pill.className = "pill " + cls.status;
+    document.getElementById("live-status-reason").textContent = cls.reason;
+
+    var mkv = document.getElementById("measured-kv");
+    mkv.innerHTML = "";
+    var rows = [
+      ["Selection, control", measured ? (run.control.sel+"/"+run.control.n) : "—"],
+      ["Selection, treatment", measured.sel+"/"+measured.n],
+      ["P(effect > 0), full run", measured.pEffectPos.toFixed(3)],
+      ["Channel scope", armCfg.scope === "global" ? "Global (all channels)" : "Agent-only"],
+      ["CM, control / treatment", fmtUSD(b.cmCtrl) + " / " + fmtUSD(b.cmTrt)]
+    ];
+    rows.forEach(function(r){
+      var d = el("div","kv");
+      d.innerHTML = '<span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span>';
+      mkv.appendChild(d);
+    });
+
+    var beBox = document.getElementById("breakeven-box");
+    var beHead = document.getElementById("breakeven-headline");
+    var beNote = document.getElementById("breakeven-note");
+    if (armCfg.scope !== "global") {
+      beHead.textContent = "N/A";
+      beNote.textContent = "Agent-only levers don't touch non-agent volume, so there's no channel-share tradeoff to solve for.";
+    } else {
+      var nNonBE = breakevenNonAgentShare(b.agentGain, b.cmCtrl, b.cmTrt, eps, armCfg.pricePct);
+      var agentOrdersNow = b.ordersTrt;
+      if (nNonBE === null || nNonBE < 0) {
+        beHead.textContent = "Never, at this price";
+        beNote.textContent = "The per-order effect on non-agent customers is zero or favorable here, so there's no non-agent volume level at which this lever stops paying for itself — or the agent side never generates enough gain to offset it at any realistic scale.";
+      } else {
+        var totalVolNow = agentOrdersNow + econ.nNon;
+        var agentShareNow = totalVolNow ? agentOrdersNow/totalVolNow*100 : 0;
+        var totalVolBE = agentOrdersNow + nNonBE;
+        var agentShareBE = totalVolBE ? agentOrdersNow/totalVolBE*100 : 0;
+        beHead.textContent = agentShareBE.toFixed(1) + "% agent share";
+        beNote.textContent = "This lever breaks even once agent-mediated demand reaches about " + agentShareBE.toFixed(1) +
+          "% of total order volume, holding today's agent-side gain fixed. Modeled agent share today: " + agentShareNow.toFixed(2) + "%.";
+      }
+    }
+  }
+
+  [selRun, selArm, slConv, slKappa, slEps].forEach(function(node){
+    node.addEventListener("input", renderInstrument);
+    node.addEventListener("change", renderInstrument);
+  });
+  renderInstrument();
+
+  /* ============================================================= SECTION 4: ledger */
+
+  (function renderLedger(){
+    var tbody = document.getElementById("ledger-table");
+    ledgerRows.forEach(function(r){
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        "<td>"+r.name+"</td>" +
+        "<td>"+r.value+"</td>" +
+        "<td><span class=\"status-chip "+r.status+"\">"+r.status+"</span></td>" +
+        "<td>"+r.source+"</td>" +
+        "<td class=\"sens\">"+r.sensitivity+"</td>";
+      tbody.appendChild(tr);
+    });
+  })();
+
+})();
+</script>
