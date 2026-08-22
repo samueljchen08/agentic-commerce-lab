@@ -36,10 +36,16 @@ ROOT = Path(__file__).resolve().parent.parent
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Run real probes against a provider.")
-    p.add_argument("--mandates", type=int, default=60)
-    p.add_argument("--reps", type=int, default=1,
+    p.add_argument("--mandates", type=int, default=None,
+                   help="Default 60 (full run) or 20 (--smoke). Explicit values "
+                        "override the --smoke default too.")
+    p.add_argument("--reps", type=int, default=None,
                    help="Replications per mandate. Breadth beats depth — "
-                        "extra reps of the same mandate buy very little power.")
+                        "extra reps of the same mandate buy very little power for "
+                        "the main design, but multiple reps are what let ICC "
+                        "actually be measured (see --smoke --reps N). Default 1 "
+                        "(full run) or 1 (--smoke); explicit values override "
+                        "--smoke's default too.")
     p.add_argument("--prompt-variants", type=int, default=1)
     p.add_argument("--smoke", action="store_true",
                    help="20 mandates, control arm only. Reads the baseline rate.")
@@ -74,8 +80,8 @@ def main() -> int:
     focal = next(p for p in catalog if p.product_id == FOCAL_ID)
 
     # ---- design
-    n_mandates = 20 if args.smoke else args.mandates
-    reps = 1 if args.smoke else args.reps
+    n_mandates = args.mandates if args.mandates is not None else (20 if args.smoke else 60)
+    reps = args.reps if args.reps is not None else 1
     mandates = build_mandate_set(n=n_mandates)
     arms = [] if args.smoke else release_0_set(focal)
     n_arms = len(arms) + 1
