@@ -14,17 +14,18 @@ run is an expensive way to learn it.
 """
 from __future__ import annotations
 
-import os
-
 import argparse
+import os
 import sys
 from pathlib import Path
 
-from acop.adapters.anthropic_adapter import AnthropicBuyerAdapter, ProviderPricing
+from acop.adapters.anthropic_adapter import AnthropicBuyerAdapter
+from acop.adapters.anthropic_adapter import ProviderPricing as AnthropicPricing
+from acop.adapters.openai_adapter import OpenAIBuyerAdapter
+from acop.adapters.openai_adapter import ProviderPricing as OpenAIPricing
 from acop.adapters.resumable import ResumableAdapter
 from acop.catalog_v1 import FOCAL_ID, build_catalog, verification_report
-from acop.economics import MerchantEconomics
-from acop.interventions import release_0_set
+from acop.interventions import release_0_set, representation_arms
 from acop.mandates import build_mandate_set, segment_summary
 from acop.manifest import ArtifactStore
 from acop.pipeline import print_summary, run_pipeline
@@ -56,7 +57,17 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--allow-unverified", action="store_true",
                    help="Run against a catalog with unfilled checkout fields. "
                         "Shipping and lead-time arms will be meaningless.")
+    p.add_argument("--provider", choices=["anthropic", "openai"], default="anthropic",
+                   help="Item 7: second-provider arm. 'openai' requires "
+                        "OPENAI_API_KEY, PROVIDER_B_MODEL, "
+                        "PROVIDER_B_INPUT_PER_MTOK/OUTPUT_PER_MTOK in .env.")
     p.add_argument("--experiment-id", default=None)
+    p.add_argument("--representation", action="store_true",
+                   help="Item 9: run the representation-validity arms (same SLA "
+                        "fact as a structured shipping field vs. product copy vs. "
+                        "absent-control) instead of release_0_set. Validate "
+                        "structurally on the simulated oracle first: "
+                        "python -m scripts.run_simulated --representation")
     return p.parse_args()
 
 
@@ -83,14 +94,25 @@ def main() -> int:
     n_mandates = args.mandates if args.mandates is not None else (20 if args.smoke else 60)
     reps = args.reps if args.reps is not None else 1
     mandates = build_mandate_set(n=n_mandates)
-    arms = [] if args.smoke else release_0_set(focal)
+    if args.smoke:
+        arms = []
+    elif args.representation:
+        arms = representation_arms(focal)
+    else:
+        arms = release_0_set(focal)
     n_arms = len(arms) + 1
     n_probes = n_mandates * reps * n_arms
 
-    model = require_env("PROVIDER_A_MODEL",
-                        "Set it to the exact model ID from Anthropic's current docs.")
-    in_price = float(require_env("PROVIDER_A_INPUT_PER_MTOK"))
-    out_price = float(require_env("PROVIDER_A_OUTPUT_PER_MTOK"))
+    if args.provider == "openai":
+        model = require_env("PROVIDER_B_MODEL",
+                            "Set it to the exact model ID from OpenAI's current docs.")
+        in_price = float(require_env("PROVIDER_B_INPUT_PER_MTOK"))
+        out_price = float(require_env("PROVIDER_B_OUTPUT_PER_MTOK"))
+    else:
+        model = require_env("PROVIDER_A_MODEL",
+                            "Set it to the exact model ID from Anthropic's current docs.")
+        in_price = float(require_env("PROVIDER_A_INPUT_PER_MTOK"))
+        out_price = float(require_env("PROVIDER_A_OUTPUT_PER_MTOK"))
     budget = float(os.environ.get("MAX_RUN_COST_USD", "25"))
 
     print(f"\n  catalog   {len(catalog)} products, focal {focal.brand} {focal.title}")
@@ -122,19 +144,32 @@ def main() -> int:
             return 1
 
     # ---- adapters
-    require_env("ANTHROPIC_API_KEY")
     store = ArtifactStore(ROOT / "artifacts")
-    inner = AnthropicBuyerAdapter(
-        model=model,
-        pricing=ProviderPricing(input_per_mtok=in_price, output_per_mtok=out_price),
-        store=store,
-        temperature=1.0,
-        diagnostic_rate=0.07,
-    )
+    if args.provider == "openai":
+        require_env("OPENAI_API_KEY")
+        inner = OpenAIBuyerAdapter(
+            model=model,
+            pricing=OpenAIPricing(input_per_mtok=in_price, output_per_mtok=out_price),
+            store=store,
+            temperature=1.0,
+            diagnostic_rate=0.07,
+        )
+    else:
+        require_env("ANTHROPIC_API_KEY")
+        inner = AnthropicBuyerAdapter(
+            model=model,
+            pricing=AnthropicPricing(input_per_mtok=in_price, output_per_mtok=out_price),
+            store=store,
+            temperature=1.0,
+            diagnostic_rate=0.07,
+        )
     adapter = ResumableAdapter(inner=inner, store=store, force_reparse=args.force_reparse)
 
+    provider_suffix = "" if args.provider == "anthropic" else f"_{args.provider}"
     exp_id = args.experiment_id or (
-        "slice_smoke_001" if args.smoke else f"slice_release0_{n_mandates}m"
+        f"slice_smoke{provider_suffix}_001" if args.smoke
+        else f"slice_representation{provider_suffix}_{n_mandates}m" if args.representation
+        else f"slice_release0{provider_suffix}_{n_mandates}m"
     )
 
     out = run_pipeline(

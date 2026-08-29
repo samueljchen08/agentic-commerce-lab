@@ -39,6 +39,7 @@ class ActionStatus(StrEnum):
     RECOMMENDED = "RECOMMENDED"
     PROMISING = "PROMISING"
     INCONCLUSIVE = "INCONCLUSIVE"
+    NO_EFFECT = "NO_EFFECT"
     REJECTED_VALUE = "REJECTED_VALUE"
     REJECTED_RISK = "REJECTED_RISK"
     REJECTED_FEASIBILITY = "REJECTED_FEASIBILITY"
@@ -159,6 +160,8 @@ class ActionResult:
     selection_rate_treatment: float = 0.0
     effect_pp: float = 0.0
     p_effect_positive: float = 0.0
+    effect_ci90_low_pp: float = 0.0
+    effect_ci90_high_pp: float = 0.0
 
     cm_control_cents: int = 0
     cm_treatment_cents: int = 0
@@ -277,6 +280,8 @@ def evaluate_action(
         selection_rate_treatment=float(s_trt.mean()),
         effect_pp=float(effect_posterior.mean()),
         p_effect_positive=float((effect_posterior > 0).mean()),
+        effect_ci90_low_pp=float(np.quantile(effect_posterior, 0.05)),
+        effect_ci90_high_pp=float(np.quantile(effect_posterior, 0.95)),
         cm_control_cents=cm_ctrl,
         cm_treatment_cents=cm_trt,
         agent_orders_control=float(b["orders_ctrl"].mean()),
@@ -333,10 +338,23 @@ def classify(
     min_value_cents: int = 100_000,
     max_loss_probability: float = 0.25,
     inconclusive_p_band: tuple[float, float] = (0.15, 0.85),
+    rope_pp: float = 0.01,
 ) -> ActionResult:
     """Assign exactly one status. Nothing is silently dropped, and
     'inconclusive' is kept distinct from 'no effect' — conflating those is
-    how an experimentation product loses credible users."""
+    how an experimentation product loses credible users.
+
+    A p_effect_positive stuck near 0.50 is ambiguous by itself: it is what
+    both "not enough data yet" and "genuinely no effect" look like. The two
+    are told apart by CI width, not by p alone. `rope_pp` is a region of
+    practical equivalence around zero (default 1 percentage point): if the
+    90% CI on the selection effect sits entirely inside it, more mandates
+    will narrow the CI but cannot move p away from 0.50, because there is no
+    directional signal in the data to amplify -- that is NO_EFFECT, a
+    decisive finding, not INCONCLUSIVE. A CI that is merely wide -- still
+    straddling effect sizes big enough to matter -- stays INCONCLUSIVE,
+    because more mandates genuinely could resolve it either way.
+    """
     lo, hi = inconclusive_p_band
     if not ie.feasible:
         r.status = ActionStatus.REJECTED_FEASIBILITY
@@ -344,11 +362,21 @@ def classify(
             ie.operational_requirements
         )
     elif lo < r.p_effect_positive < hi:
-        r.status = ActionStatus.INCONCLUSIVE
-        r.status_reason = (
-            f"selection effect not resolved (P(effect>0)={r.p_effect_positive:.2f}); "
-            "more mandates required"
-        )
+        if -rope_pp <= r.effect_ci90_low_pp and r.effect_ci90_high_pp <= rope_pp:
+            r.status = ActionStatus.NO_EFFECT
+            r.status_reason = (
+                f"90% CI [{r.effect_ci90_low_pp:+.2%}, {r.effect_ci90_high_pp:+.2%}] "
+                f"lies entirely within the ±{rope_pp:.0%} region of practical "
+                "equivalence; more mandates would narrow this further but cannot "
+                "resolve it to a direction -- there is no effect to find"
+            )
+        else:
+            r.status = ActionStatus.INCONCLUSIVE
+            r.status_reason = (
+                f"selection effect not resolved (P(effect>0)={r.p_effect_positive:.2f}, "
+                f"90% CI [{r.effect_ci90_low_pp:+.2%}, {r.effect_ci90_high_pp:+.2%}]); "
+                "more mandates required"
+            )
     elif r.delta_total_cents < min_value_cents:
         r.status = ActionStatus.REJECTED_VALUE
         r.status_reason = f"modeled contribution ${r.delta_total_cents/100:,.0f} below floor"
@@ -382,5 +410,6 @@ def rank(actions: list[ActionResult]) -> list[ActionResult]:
         ActionStatus.RECOMMENDED: 0, ActionStatus.PROMISING: 1,
         ActionStatus.INCONCLUSIVE: 2, ActionStatus.REJECTED_RISK: 3,
         ActionStatus.REJECTED_FEASIBILITY: 4, ActionStatus.REJECTED_VALUE: 5,
+        ActionStatus.NO_EFFECT: 6,
     }
     return sorted(actions, key=lambda a: (order[a.status], -a.delta_total_cents))

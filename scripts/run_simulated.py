@@ -6,13 +6,14 @@ change, every economics change, and all report development.
 """
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 from acop.adapters import SimulatedAgentAdapter
 from acop.catalog import PLACEHOLDER_FOCAL_ID, catalog_shape_report, placeholder_catalog
 from acop.domain import cents
 from acop.economics import MerchantEconomics
-from acop.interventions import release_0_set
+from acop.interventions import release_0_set, representation_arms
 from acop.mandates import build_mandate_set, render, segment_summary
 from acop.pipeline import print_summary, run_pipeline
 
@@ -47,7 +48,19 @@ def demo_economics(focal_price_cents: int) -> MerchantEconomics:
     )
 
 
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(description="Full loop on the simulated oracle. Free.")
+    p.add_argument("--representation", action="store_true",
+                   help="Run the representation-validity arms (item 9: same "
+                        "commercial truth encoded as a structured field vs "
+                        "product copy vs absent-control) instead of release_0_set. "
+                        "Structural check only — this says nothing about how a "
+                        "real model treats structured vs. text-only SLA claims.")
+    return p.parse_args()
+
+
 def main() -> None:
+    args = parse_args()
     catalog = placeholder_catalog()
     focal = next(p for p in catalog if p.product_id == PLACEHOLDER_FOCAL_ID)
 
@@ -69,12 +82,17 @@ def main() -> None:
             print(f"    [{m.mandate_id} t{t}] {render(m, t)}")
         print()
 
+    arms = representation_arms(focal) if args.representation else release_0_set(focal)
+    exp_id = (
+        "sim_desk_representation_001" if args.representation else "sim_desk_release0_001"
+    )
+
     out = run_pipeline(
-        experiment_id="sim_desk_release0_001",
+        experiment_id=exp_id,
         catalog=catalog,
         focal_product_id=PLACEHOLDER_FOCAL_ID,
         mandates=mandates,
-        arms=release_0_set(focal),
+        arms=arms,
         merchant_economics=demo_economics(focal.price_cents),
         adapter=SimulatedAgentAdapter(temperature=1.0, position_bias=True),
         artifacts_dir=ROOT / "artifacts",

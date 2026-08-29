@@ -208,3 +208,41 @@ def recover_known_effect(true_effect: float, n_mandates: int, reps: int, icc_tar
     post = w @ t - w @ c
     lo, hi = np.quantile(post, [0.025, 0.975])
     return float(post.mean()), bool(lo <= true_effect <= hi)
+
+
+def spearman_rank_correlation(a: dict[str, float], b: dict[str, float]) -> float:
+    """Spearman's rho over the keys shared by both dicts.
+
+    Used to compare two providers' action rankings (item 7): a per-provider
+    effect size is a different number on each provider, but if the ranking
+    it induces over interventions agrees, that is a genuine cross-provider
+    finding. Disagreement is a finding too, not noise -- report it, don't
+    average it away.
+
+    Ties get the average of their tied ranks (standard midrank treatment).
+    Returns 0.0 if fewer than 2 shared keys (undefined, not "no correlation").
+    """
+    keys = sorted(set(a) & set(b))
+    if len(keys) < 2:
+        return 0.0
+
+    def midranks(values: list[float]) -> list[float]:
+        order = sorted(range(len(values)), key=lambda i: values[i])
+        ranks = [0.0] * len(values)
+        i = 0
+        while i < len(order):
+            j = i
+            while j + 1 < len(order) and values[order[j + 1]] == values[order[i]]:
+                j += 1
+            avg_rank = (i + j) / 2 + 1
+            for k in range(i, j + 1):
+                ranks[order[k]] = avg_rank
+            i = j + 1
+        return ranks
+
+    ra = midranks([a[k] for k in keys])
+    rb = midranks([b[k] for k in keys])
+    ra_arr, rb_arr = np.array(ra), np.array(rb)
+    if ra_arr.std() == 0 or rb_arr.std() == 0:
+        return 0.0
+    return float(np.corrcoef(ra_arr, rb_arr)[0, 1])
