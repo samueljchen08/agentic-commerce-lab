@@ -1,0 +1,483 @@
+<title>Arbor Decision Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,500&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================== TOKENS ============================== */
+  :root{
+    --paper:#EEF1EE; --paper-raised:#F6F8F5;
+    --ink:#14181B; --ink-muted:#4B5650; --ink-faint:#7C8880;
+    --rule:#D6DAD3; --rule-strong:#B9C2B7;
+    --profit:#1C6B4F; --profit-bg:#E4EEE7;
+    --loss:#A33D2E; --loss-bg:#F3E4E0;
+    --pending:#8A6D1F; --pending-bg:#F0E9D6;
+    --ghost:#9AA3AC;
+
+    --f-display:"Newsreader", Georgia, "Times New Roman", serif;
+    --f-body:"Archivo", -apple-system, "Segoe UI", sans-serif;
+    --f-mono:"IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+    --sp-1:.25rem; --sp-2:.5rem; --sp-3:.75rem; --sp-4:1rem; --sp-5:1.5rem;
+    --sp-6:2rem; --sp-8:4rem; --sp-10:6rem;
+
+    --measure-prose:min(66ch, 92vw);
+    --measure-data:min(1040px, 92vw);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#14181B; --paper-raised:#1B2024;
+      --ink:#EDF1EC; --ink-muted:#A8B3AC; --ink-faint:#6E7A73;
+      --rule:#2A3129; --rule-strong:#3A443A;
+      --profit:#4FAE86; --profit-bg:#1E362B;
+      --loss:#E17862; --loss-bg:#3A241F;
+      --pending:#D3AD52; --pending-bg:#3A3120;
+      --ghost:#6B7680;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#14181B; --paper-raised:#1B2024;
+    --ink:#EDF1EC; --ink-muted:#A8B3AC; --ink-faint:#6E7A73;
+    --rule:#2A3129; --rule-strong:#3A443A;
+    --profit:#4FAE86; --profit-bg:#1E362B;
+    --loss:#E17862; --loss-bg:#3A241F;
+    --pending:#D3AD52; --pending-bg:#3A3120;
+    --ghost:#6B7680;
+  }
+
+  /* ============================== UTILITIES ============================= */
+  .flex{display:flex} .grid{display:grid} .items-center{align-items:center}
+  .items-baseline{align-items:baseline} .justify-between{justify-content:space-between}
+  .flex-col{flex-direction:column} .flex-wrap{flex-wrap:wrap}
+  .gap-1{gap:var(--sp-1)} .gap-2{gap:var(--sp-2)} .gap-3{gap:var(--sp-3)}
+  .gap-4{gap:var(--sp-4)} .gap-5{gap:var(--sp-5)} .gap-6{gap:var(--sp-6)}
+  .mt-2{margin-top:var(--sp-2)} .mt-3{margin-top:var(--sp-3)} .mt-4{margin-top:var(--sp-4)}
+  .mt-5{margin-top:var(--sp-5)} .mt-6{margin-top:var(--sp-6)} .mt-8{margin-top:var(--sp-8)}
+  .mb-2{margin-bottom:var(--sp-2)} .mb-3{margin-bottom:var(--sp-3)} .mb-4{margin-bottom:var(--sp-4)}
+  .p-3{padding:var(--sp-3)} .p-4{padding:var(--sp-4)} .p-5{padding:var(--sp-5)} .p-6{padding:var(--sp-6)}
+  .py-2{padding-top:var(--sp-2);padding-bottom:var(--sp-2)}
+  .px-3{padding-left:var(--sp-3);padding-right:var(--sp-3)}
+  .w-full{width:100%} .text-right{text-align:right} .text-left{text-align:left}
+  .uppercase{text-transform:uppercase} .tracking{letter-spacing:.06em}
+  .tabular{font-variant-numeric:tabular-nums}
+  .muted{color:var(--ink-muted)} .faint{color:var(--ink-faint)}
+  .mono{font-family:var(--f-mono)} .rel{position:relative}
+
+  /* ============================== BASE ================================= */
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:var(--f-body); font-size:1rem; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--profit)}
+  h1,h2,h3{font-family:var(--f-display); text-wrap:balance; margin:0}
+  ::selection{background:var(--profit-bg); color:var(--profit)}
+  :focus-visible{outline:2px solid var(--profit); outline-offset:2px}
+
+  .prose{max-width:var(--measure-prose); margin-left:auto; margin-right:auto}
+  .data-col{max-width:var(--measure-data); margin-left:auto; margin-right:auto}
+
+  section{padding:var(--sp-8) 1.25rem}
+  section + section{border-top:1px solid var(--rule)}
+
+  .eyebrow{
+    font-family:var(--f-mono); font-size:.75rem; text-transform:uppercase;
+    letter-spacing:.08em; color:var(--ink-muted);
+  }
+  .section-head{font-size:1.75rem; font-weight:500; margin-bottom:var(--sp-2)}
+  .section-intro{color:var(--ink-muted); font-size:1.0625rem; max-width:66ch}
+
+  /* ============================== MASTHEAD ============================== */
+  .masthead{
+    padding:var(--sp-10) 1.25rem var(--sp-8);
+    display:flex; flex-direction:column; gap:var(--sp-4);
+  }
+  .badge{
+    display:inline-flex; align-items:center; gap:.4em;
+    font-family:var(--f-mono); font-size:.75rem; letter-spacing:.05em;
+    padding:.3em .7em; border:1px solid var(--rule-strong); border-radius:2px;
+    color:var(--ink-muted); width:fit-content;
+  }
+  .report-title{font-size:2.25rem; font-weight:600; line-height:1.1}
+  .meta-strip{
+    font-family:var(--f-mono); font-size:.8125rem; color:var(--ink-muted);
+    display:flex; flex-wrap:wrap; gap:var(--sp-2) var(--sp-5);
+  }
+  .meta-strip span:not(:last-child)::after{content:"·"; margin-left:var(--sp-5); color:var(--rule-strong)}
+  .headline-stat{
+    margin-top:var(--sp-6); display:flex; align-items:baseline; gap:var(--sp-4); flex-wrap:wrap;
+  }
+  .headline-number{
+    font-family:var(--f-display); font-style:italic; font-weight:500;
+    font-size:clamp(3rem, 9vw, 4.5rem); line-height:.95; color:var(--ink);
+  }
+  .headline-caption{color:var(--ink-muted); max-width:38ch; font-size:.9375rem}
+
+  /* ============================== DECISION TABLE ======================== */
+  .decision-row{
+    display:grid; grid-template-columns:auto 1fr auto auto; gap:var(--sp-4);
+    align-items:center; padding:var(--sp-4) 0; border-bottom:1px solid var(--rule);
+  }
+  .decision-row:first-of-type{border-top:1px solid var(--rule-strong)}
+  .pill{
+    font-family:var(--f-mono); font-size:.6875rem; font-weight:500; letter-spacing:.05em;
+    text-transform:uppercase; padding:.3em .6em; border-radius:2px; white-space:nowrap;
+  }
+  .pill-promising,.pill-recommended{background:var(--profit-bg); color:var(--profit)}
+  .pill-inconclusive{background:var(--pending-bg); color:var(--pending)}
+  .pill-rejected{background:var(--loss-bg); color:var(--loss)}
+  .action-label{font-size:1rem}
+  .action-sub{font-size:.8125rem; color:var(--ink-faint); margin-top:.15em}
+  .action-value{font-family:var(--f-mono); font-size:1.125rem; text-align:right; white-space:nowrap}
+  .action-value.pos{color:var(--profit)} .action-value.neg{color:var(--loss)} .action-value.zero{color:var(--ink-muted)}
+  .prob-bar{width:72px; height:6px; background:var(--rule); border-radius:99px; overflow:hidden; margin-top:.35em; margin-left:auto}
+  .prob-fill{height:100%; background:var(--profit)}
+  .prob-label{font-family:var(--f-mono); font-size:.6875rem; color:var(--ink-faint); text-align:right}
+
+  /* ============================== BRIDGE ================================ */
+  .bridge-wrap{overflow-x:auto; padding-bottom:.5rem}
+  .bridge{min-width:640px; display:flex; align-items:flex-end; gap:var(--sp-2); height:280px; padding:var(--sp-4) 0}
+  .bridge-col{flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end}
+  .bridge-bars{position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center}
+  .bridge-bar{width:56%; border-radius:2px 2px 0 0}
+  .bridge-bar.up{background:var(--profit)}
+  .bridge-bar.down{background:var(--loss)}
+  .bridge-bar.total{background:var(--ink)}
+  .bridge-ghost{
+    position:absolute; left:50%; transform:translateX(-50%); width:70%;
+    border:1.5px dashed var(--ghost); border-radius:2px; background:transparent;
+  }
+  .bridge-val{font-family:var(--f-mono); font-size:.8125rem; margin-top:var(--sp-2); text-align:center; white-space:nowrap}
+  .bridge-label{font-size:.75rem; color:var(--ink-muted); text-align:center; margin-top:.25em; max-width:110px}
+  .bridge-zero-line{position:absolute; left:0; right:0; border-top:1px solid var(--rule-strong)}
+  .ghost-callout{
+    display:inline-flex; align-items:center; gap:.5em; font-family:var(--f-mono); font-size:.8125rem;
+    color:var(--ghost); border:1.5px dashed var(--ghost); border-radius:2px; padding:.4em .8em;
+  }
+
+  /* ============================== LEDGER TABLE ========================== */
+  table{width:100%; border-collapse:collapse; font-size:.9375rem}
+  .ledger-table th{
+    text-align:left; font-family:var(--f-mono); font-size:.6875rem; text-transform:uppercase;
+    letter-spacing:.05em; color:var(--ink-faint); font-weight:400;
+    padding:0 var(--sp-3) var(--sp-2); border-bottom:1px solid var(--rule-strong);
+  }
+  .ledger-table td{padding:var(--sp-3); border-bottom:1px solid var(--rule)}
+  .ledger-table td.num{font-family:var(--f-mono); text-align:right}
+  .status-tag{
+    font-family:var(--f-mono); font-size:.6875rem; letter-spacing:.04em;
+    padding:.2em .5em; border-radius:2px; background:var(--paper-raised); color:var(--ink-muted);
+    border:1px solid var(--rule-strong);
+  }
+  .sens-high{color:var(--loss)} .sens-medium{color:var(--pending)} .sens-low{color:var(--ink-faint)}
+
+  /* ============================== SLIDERS ================================ */
+  .explorer{
+    background:var(--paper-raised); border:1px solid var(--rule); border-radius:4px;
+    padding:var(--sp-6);
+  }
+  .slider-row{display:grid; grid-template-columns:200px 1fr 70px; align-items:center; gap:var(--sp-4)}
+  .slider-row + .slider-row{margin-top:var(--sp-5)}
+  .slider-name{font-size:.9375rem}
+  .slider-range{font-size:.75rem; color:var(--ink-faint); font-family:var(--f-mono)}
+  input[type="range"]{
+    -webkit-appearance:none; width:100%; height:4px; background:var(--rule-strong);
+    border-radius:99px; outline-offset:6px;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:16px; height:16px; border-radius:50%;
+    background:var(--profit); cursor:pointer; border:2px solid var(--paper);
+    box-shadow:0 0 0 1px var(--profit);
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:16px; height:16px; border-radius:50%; background:var(--profit);
+    cursor:pointer; border:2px solid var(--paper); box-shadow:0 0 0 1px var(--profit);
+  }
+  .slider-val{font-family:var(--f-mono); font-size:.9375rem; text-align:right}
+  .explorer-results{margin-top:var(--sp-6); display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:var(--sp-4)}
+  .explorer-card{border-top:2px solid var(--rule-strong); padding-top:var(--sp-3)}
+  .explorer-card .lbl{font-size:.8125rem; color:var(--ink-muted); margin-bottom:.35em}
+  .explorer-card .val{font-family:var(--f-mono); font-size:1.375rem}
+  .approx-note{
+    font-size:.8125rem; color:var(--ink-faint); margin-top:var(--sp-5);
+    border-left:2px solid var(--rule-strong); padding-left:var(--sp-3);
+  }
+
+  /* ============================== MISC ================================== */
+  .breakeven-line{
+    display:flex; gap:var(--sp-3); align-items:flex-start; padding:var(--sp-4) 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .breakeven-line:first-of-type{border-top:1px solid var(--rule-strong)}
+  .footer{font-size:.8125rem; color:var(--ink-faint)}
+  .footer .eyebrow{margin-bottom:var(--sp-2)}
+  .kv{display:flex; justify-content:space-between; padding:.4em 0; border-bottom:1px solid var(--rule); font-family:var(--f-mono); font-size:.8125rem}
+  .kv span:first-child{color:var(--ink-muted); font-family:var(--f-body)}
+</style>
+
+<div class="masthead">
+  <span class="badge">EVIDENCE CLASS · E1a — CONTROLLED LAB, SINGLE PROVIDER</span>
+  <h1 class="report-title">Arbor Decision Ledger</h1>
+  <div class="meta-strip">
+    <span>60 mandates</span><span>300 real probes</span><span>claude&#8209;sonnet&#8209;5</span>
+    <span>10 verified real competitors</span><span>Aug 21, 2026</span>
+  </div>
+  <div class="headline-stat">
+    <span class="headline-number tabular">5.0%</span>
+    <span class="headline-caption">Arbor's control-condition selection rate — 3 of 60 real buyer mandates, against the fully verified competitive set, before any intervention.</span>
+  </div>
+</div>
+
+<!-- ============================== 1. DECISION ============================== -->
+<section>
+  <div class="data-col">
+    <div class="eyebrow mb-2">The decision</div>
+    <h2 class="section-head">Four levers, ranked</h2>
+    <p class="section-intro mt-2">Modeled full-channel contribution — agent-channel gain minus non-agent exposure — not selection lift alone.</p>
+
+    <div class="mt-6">
+      <div class="decision-row">
+        <span class="pill pill-promising">Promising</span>
+        <div><div class="action-label">Do nothing</div><div class="action-sub">Always on the board</div></div>
+        <div><div class="action-value zero">$0</div></div>
+        <div><div class="prob-label">P(profit&gt;0)</div><div class="prob-bar"><div class="prob-fill" style="width:100%"></div></div></div>
+      </div>
+
+      <div class="decision-row">
+        <span class="pill pill-inconclusive">Inconclusive</span>
+        <div><div class="action-label">Complete structured attributes in agent feed</div><div class="action-sub">P(effect&gt;0)=0.50 — not resolved at n=60</div></div>
+        <div><div class="action-value neg">&minus;$8,966</div></div>
+        <div><div class="prob-label">P(profit&gt;0)</div><div class="prob-bar"><div class="prob-fill" style="width:49.7%"></div></div></div>
+      </div>
+
+      <div class="decision-row">
+        <span class="pill pill-inconclusive">Inconclusive</span>
+        <div><div class="action-label">Expose existing 7&ndash;day delivery SLA in agent feed</div><div class="action-sub">P(effect&gt;0)=0.50 — not resolved at n=60</div></div>
+        <div><div class="action-value neg">&minus;$10,309</div></div>
+        <div><div class="prob-label">P(profit&gt;0)</div><div class="prob-bar"><div class="prob-fill" style="width:49.7%"></div></div></div>
+      </div>
+
+      <div class="decision-row">
+        <span class="pill pill-rejected">Rejected — value</span>
+        <div><div class="action-label">Free standard shipping (all channels)</div><div class="action-sub">Selection lift +1.69pp, P(effect&gt;0)=1.000 — and still the worst-but-one action</div></div>
+        <div><div class="action-value neg">&minus;$188,718</div></div>
+        <div><div class="prob-label">P(profit&gt;0)</div><div class="prob-bar"><div class="prob-fill" style="width:.1%"></div></div></div>
+      </div>
+
+      <div class="decision-row">
+        <span class="pill pill-rejected">Rejected — value</span>
+        <div><div class="action-label">Cut list price 5% ($474)</div><div class="action-sub">Zero decisions changed across 300 real comparisons</div></div>
+        <div><div class="action-value neg">&minus;$236,982</div></div>
+        <div><div class="prob-label">P(profit&gt;0)</div><div class="prob-bar"><div class="prob-fill" style="width:0%"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 2. THE BRIDGE ============================== -->
+<section>
+  <div class="data-col">
+    <div class="eyebrow mb-2">The ledger bridge</div>
+    <h2 class="section-head">The biggest lift is the worst action on the board</h2>
+    <p class="section-intro mt-2">Free shipping is the <em>only</em> lever with a statistically confident, positive selection effect. It is also one of the two rejected actions — because it is a global-channel lever, and the agent channel mediates only a sliver of total demand.</p>
+
+    <div class="ghost-callout mt-6">the naive read &nbsp;&rarr;&nbsp; +1.69pp selection lift (+34% relative) &nbsp;&rarr;&nbsp; looks like a clear win</div>
+
+    <div class="bridge-wrap mt-6">
+      <div class="bridge" id="static-bridge"></div>
+    </div>
+
+    <div class="grid gap-4 mt-4" style="grid-template-columns:1fr 1fr">
+      <div>
+        <p class="muted" style="font-size:.9375rem">Even <em>inside</em> the agent channel, shipping-subsidized orders that would have arrived anyway (cannibalization) outweigh the volume and margin gain: agent-channel contribution alone is <strong class="mono">&minus;$10,118</strong>. Then the same discount applies to all ~9,400 non-agent orders/year, at <strong class="mono">&minus;$178,600</strong> — the number a selection-lift metric never sees.</p>
+      </div>
+      <div>
+        <p class="muted" style="font-size:.9375rem">This is the correction this project's economics engine exists to make: <span class="mono" style="font-size:.875rem">&Delta;total = agent_gain &minus; non_agent_exposure</span>, not lift per agent opportunity. The lift is real. The recommendation built from the lift alone would have been wrong.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 3. ASSUMPTIONS LEDGER ============================== -->
+<section>
+  <div class="data-col">
+    <div class="eyebrow mb-2">Assumptions ledger</div>
+    <h2 class="section-head">What's measured, and what's assumed</h2>
+    <p class="section-intro mt-2">Selection rates above are measured, real-probe data. Everything below — the merchant unit economics that turns a selection rate into a dollar figure — is synthetic demo scenario, never merchant fact. Every dollar figure on this page inherits the "high" sensitivity rows.</p>
+
+    <table class="ledger-table mt-6">
+      <thead><tr><th>Input</th><th>Value</th><th>Status</th><th class="text-right">Sensitivity</th></tr></thead>
+      <tbody id="assumptions-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================== 4. SENSITIVITY EXPLORER ============================== -->
+<section>
+  <div class="data-col">
+    <div class="eyebrow mb-2">Sensitivity explorer</div>
+    <h2 class="section-head">Move the two highest-sensitivity assumptions</h2>
+    <p class="section-intro mt-2">Post-selection conversion and cannibalization are the two "high" sensitivity rows above. Drag either — every action's modeled contribution recomputes live.</p>
+
+    <div class="explorer mt-6">
+      <div class="slider-row">
+        <div><div class="slider-name">Post&#8209;selection conversion</div><div class="slider-range">swept 42%&ndash;68%</div></div>
+        <input type="range" id="slider-q" min="0.42" max="0.68" step="0.005" value="0.55">
+        <div class="slider-val tabular" id="val-q">55%</div>
+      </div>
+      <div class="slider-row">
+        <div><div class="slider-name">Cannibalization rate</div><div class="slider-range">swept 0%&ndash;55%</div></div>
+        <input type="range" id="slider-k" min="0" max="0.55" step="0.005" value="0.30">
+        <div class="slider-val tabular" id="val-k">30%</div>
+      </div>
+
+      <div class="explorer-results" id="explorer-results"></div>
+      <p class="approx-note">Deterministic point-estimate recomputation of <span class="mono">acop/economics.py</span>'s value bridge — not a re-run of the Bayesian posterior. Non-agent price elasticity is held at its prior midpoint (0.75); it only affects the price-cut arm's non-agent term. Static figures elsewhere on this page are the full posterior mean, with 90%/95% credible intervals — this panel is for exploring direction and rough magnitude, not for citing a number.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 5. BREAKEVEN ============================== -->
+<section>
+  <div class="data-col">
+    <div class="eyebrow mb-2">Breakeven channel share</div>
+    <h2 class="section-head">Neither rejected action has a breakeven</h2>
+    <p class="section-intro mt-2">The usual next question is "at what agent-channel share would this pay off?" For both global-scope actions here, the honest answer is: none. Agent-channel contribution is linear in agent volume and passes through the origin — since it's already negative at current volume, scaling the agent channel up only scales the loss, it never crosses zero.</p>
+
+    <div class="mt-6">
+      <div class="breakeven-line">
+        <span class="pill pill-rejected" style="margin-top:.15em">No breakeven</span>
+        <div><strong>Free standard shipping</strong> — agent-channel contribution alone is already &minus;$10,118 at current volume (cannibalization exceeds the volume/margin gain). No finite increase in agent-mediated demand fixes that; the per-order economics are wrong, not the scale.</div>
+      </div>
+      <div class="breakeven-line">
+        <span class="pill pill-rejected" style="margin-top:.15em">No breakeven</span>
+        <div><strong>Cut list price 5%</strong> — agent-channel contribution alone is &minus;$32,952: the price cut produced zero measured selection change, so the discount is pure margin loss with no offsetting volume, in either channel.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 6. EVIDENCE FOOTER ============================== -->
+<section>
+  <div class="prose footer">
+    <div class="eyebrow">Evidence &amp; methodology</div>
+    <div class="kv"><span>Evidence class</span><span>E1a_CONTROLLED_LAB_SINGLE_PROVIDER — real probes, single provider, lab catalog</span></div>
+    <div class="kv"><span>Provider / model</span><span>anthropic / claude-sonnet-5</span></div>
+    <div class="kv"><span>Design</span><span>60 mandates × 5 arms (control + 4) × 1 rep = 300 probes</span></div>
+    <div class="kv"><span>Parser quality</span><span>0 low-confidence, 0 unresolved (of 300)</span></div>
+    <div class="kv"><span>ICC (separate 30-mandate × 3-rep calibration run)</span><span>0.7456 — mandate breadth, not replication, is the right lever for more power</span></div>
+    <div class="kv"><span>Catalog</span><span>10 real competitors, source-verified line by line; 1 fictional focal (Arbor)</span></div>
+    <div class="kv"><span>Position bias check</span><span>5.2% / 8.0% / 0.0% selection by candidate rank band — no material ordering effect detected</span></div>
+    <p class="mt-4">This is a lab measurement of agent choice behavior on one provider, translated through synthetic merchant economics. It is not a real-world lift and not real merchant P&amp;L — see the assumptions ledger above for every figure that is not a direct measurement.</p>
+  </div>
+</section>
+
+<script>
+(function(){
+  // ---- fixed per-action inputs, sourced from acop/economics.py + this run's artifacts
+  var N_CMP = 52000, N_NON = 9400, DISPLACED_CM = 17100, S_CTRL = 0.05, EPS_MID = 0.75;
+  var actions = [
+    { id:"attrs",  label:"Complete structured attributes", scope:"agent_only", mult:1.00, effect:0.0002359,  cmCtrl:9293, cmTrt:9293, pricePct:0 },
+    { id:"sla",    label:"Expose 7-day SLA",                scope:"agent_only", mult:1.00, effect:-0.0000209, cmCtrl:9293, cmTrt:9293, pricePct:0 },
+    { id:"ship",   label:"Free standard shipping",          scope:"global",     mult:1.08, effect:0.016935,   cmCtrl:9293, cmTrt:7393, pricePct:0 },
+    { id:"price",  label:"Cut list price 5%",                scope:"global",     mult:1.05, effect:0.0,        cmCtrl:9293, cmTrt:6866, pricePct:-0.05 }
+  ];
+
+  function fmtUsd(cents){
+    var d = cents/100, sign = d<0 ? "−" : "";
+    return sign + "$" + Math.abs(Math.round(d)).toLocaleString();
+  }
+
+  function bridge(a, q0, kappa){
+    var qTrt = Math.min(1, Math.max(0, q0 * a.mult));
+    var sTrt = Math.min(1, Math.max(0, S_CTRL + a.effect));
+    var ordersCtrl = N_CMP * S_CTRL * q0;
+    var ordersTrt  = N_CMP * sTrt * qTrt;
+    var grossDelta = ordersTrt*a.cmTrt - ordersCtrl*a.cmCtrl;
+    var dOrders = ordersTrt - ordersCtrl;
+    var cannibal = Math.max(0, dOrders) * kappa * DISPLACED_CM;
+    var agentGain = grossDelta - cannibal;
+    var nonAgent = 0;
+    if (a.scope === "global"){
+      var volResp = -EPS_MID * a.pricePct;
+      var after = N_NON * (1+volResp) * a.cmTrt;
+      var before = N_NON * a.cmCtrl;
+      nonAgent = after - before;
+    }
+    return { grossDelta:grossDelta, cannibal:cannibal, agentGain:agentGain, nonAgent:nonAgent, total:agentGain+nonAgent };
+  }
+
+  // ---- static bridge (free shipping, at defaults q0=.55 kappa=.30) ----
+  var shipAction = actions.filter(function(a){return a.id==="ship"})[0];
+  var b0 = bridge(shipAction, 0.55, 0.30);
+  var bridgeSteps = [
+    { label:"Gross agent-\nchannel delta", val:b0.grossDelta, dir:"up" },
+    { label:"minus cannibal-\nization", val:-b0.cannibal, dir:"down" },
+    { label:"= Agent-channel\ngain", val:b0.agentGain, dir: b0.agentGain>=0?"up":"down" },
+    { label:"minus non-agent\nexposure", val:b0.nonAgent, dir:"down" },
+    { label:"= Δ total", val:b0.total, dir:"total" }
+  ];
+  var maxAbs = Math.max.apply(null, bridgeSteps.map(function(s){return Math.abs(s.val)}));
+  var el = document.getElementById("static-bridge");
+  bridgeSteps.forEach(function(s){
+    var pctH = Math.max(6, Math.round(Math.abs(s.val)/maxAbs*100));
+    var col = document.createElement("div"); col.className = "bridge-col";
+    var bars = document.createElement("div"); bars.className = "bridge-bars";
+    var zero = document.createElement("div"); zero.className = "bridge-zero-line"; zero.style.bottom = "0";
+    bars.appendChild(zero);
+    var bar = document.createElement("div");
+    bar.className = "bridge-bar " + (s.dir === "total" ? "total" : (s.val>=0?"up":"down"));
+    bar.style.height = pctH + "%";
+    bars.appendChild(bar);
+    col.appendChild(bars);
+    var val = document.createElement("div"); val.className = "bridge-val tabular";
+    val.textContent = fmtUsd(s.val); col.appendChild(val);
+    var lbl = document.createElement("div"); lbl.className = "bridge-label";
+    lbl.textContent = s.label; col.appendChild(lbl);
+    el.appendChild(col);
+  });
+
+  // ---- assumptions ledger table ----
+  var rows = [
+    ["Agent comparison events / yr","52,000","SYNTHETIC","high"],
+    ["Non-agent orders / yr","9,400","SYNTHETIC","high"],
+    ["Post-selection conversion","55% (swept 42%–68%)","ASSUMED","high"],
+    ["Cannibalization","30% (swept 0%–55%)","ASSUMED","high"],
+    ["COGS","$305.00","SYNTHETIC","medium"],
+    ["Fulfillment","$74.00","SYNTHETIC","low"],
+    ["Return rate","6.0%","SYNTHETIC","low"],
+    ["Non-agent price elasticity","swept 0.0–1.5","ASSUMED","high"]
+  ];
+  var tbody = document.getElementById("assumptions-body");
+  rows.forEach(function(r){
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>"+r[0]+"</td><td class='num'>"+r[1]+"</td>"+
+      "<td><span class='status-tag'>"+r[2]+"</span></td>"+
+      "<td class='text-right sens-"+r[3]+"'>"+r[3]+"</td>";
+    tbody.appendChild(tr);
+  });
+
+  // ---- interactive explorer ----
+  var qSlider = document.getElementById("slider-q"), kSlider = document.getElementById("slider-k");
+  var qVal = document.getElementById("val-q"), kVal = document.getElementById("val-k");
+  var results = document.getElementById("explorer-results");
+
+  function render(){
+    var q0 = parseFloat(qSlider.value), kappa = parseFloat(kSlider.value);
+    qVal.textContent = Math.round(q0*100) + "%";
+    kVal.textContent = Math.round(kappa*100) + "%";
+    results.innerHTML = "";
+    actions.forEach(function(a){
+      var r = bridge(a, q0, kappa);
+      var card = document.createElement("div"); card.className = "explorer-card";
+      card.innerHTML = "<div class='lbl'>"+a.label+"</div>"+
+        "<div class='val "+(r.total>=0?"":"")+"' style='color:"+(r.total>=0?"var(--profit)":"var(--loss)")+"'>"+fmtUsd(r.total)+"</div>";
+      results.appendChild(card);
+    });
+  }
+  qSlider.addEventListener("input", render);
+  kSlider.addEventListener("input", render);
+  render();
+})();
+</script>
