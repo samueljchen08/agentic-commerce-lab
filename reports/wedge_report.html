@@ -212,8 +212,55 @@
   .breakeven-line:first-of-type{border-top:1px solid var(--rule-strong)}
   .footer{font-size:.8125rem; color:var(--ink-faint)}
   .footer .eyebrow{margin-bottom:var(--sp-2)}
-  .kv{display:flex; justify-content:space-between; padding:.4em 0; border-bottom:1px solid var(--rule); font-family:var(--f-mono); font-size:.8125rem}
+  .kv{
+    display:grid; grid-template-columns:minmax(150px,230px) 1fr; gap:var(--sp-2) var(--sp-4);
+    align-items:baseline; padding:.55em 0; border-bottom:1px solid var(--rule);
+    font-family:var(--f-mono); font-size:.8125rem;
+  }
   .kv span:first-child{color:var(--ink-muted); font-family:var(--f-body)}
+  .kv span:last-child{text-align:left}
+
+  .table-wrap{overflow-x:auto}
+
+  .source-link{
+    font-family:var(--f-mono); font-size:.8125rem; color:var(--ink-muted);
+    text-decoration:none; border-bottom:1px solid var(--rule-strong); width:fit-content;
+  }
+  .source-link:hover{color:var(--profit); border-color:var(--profit)}
+  .two-col{grid-template-columns:1fr 1fr}
+
+  /* ============================== RESPONSIVE (<=640px) =================== */
+  @media (max-width:640px){
+    section{padding:var(--sp-6) 1rem}
+    .masthead{padding:var(--sp-6) 1rem var(--sp-6)}
+    .report-title{font-size:1.75rem}
+
+    .decision-row{
+      grid-template-columns:1fr auto; row-gap:var(--sp-2); align-items:start;
+      grid-template-areas:"pill pill" "content content" "value bar";
+    }
+    .decision-row > *:nth-child(1){grid-area:pill}
+    .decision-row > *:nth-child(2){grid-area:content}
+    .decision-row > *:nth-child(3){grid-area:value; text-align:left}
+    .decision-row > *:nth-child(4){grid-area:bar}
+    .prob-bar{margin-left:0}
+    .prob-label{text-align:right}
+
+    .slider-row{
+      grid-template-columns:1fr auto; row-gap:var(--sp-2);
+      grid-template-areas:"name val" "range range";
+    }
+    .slider-row > *:nth-child(1){grid-area:name}
+    .slider-row > input[type="range"]{grid-area:range}
+    .slider-row > *:nth-child(3){grid-area:val; text-align:right}
+
+    .kv{grid-template-columns:1fr; gap:.2em}
+
+    .ledger-table{font-size:.8125rem}
+    .ledger-table td,.ledger-table th{padding:var(--sp-2) var(--sp-2) var(--sp-2) 0}
+
+    .two-col{grid-template-columns:1fr}
+  }
 </style>
 
 <div class="masthead">
@@ -227,6 +274,7 @@
     <span class="headline-number tabular">5.0%</span>
     <span class="headline-caption">Arbor's control-condition selection rate — 3 of 60 real buyer mandates, against the fully verified competitive set, before any intervention.</span>
   </div>
+  <a class="source-link mt-4" href="https://github.com/samueljchen08/agentic-commerce-lab" target="_blank" rel="noopener">Source, tests &amp; full experiment log on GitHub &#8594;</a>
 </div>
 
 <!-- ============================== 1. DECISION ============================== -->
@@ -288,7 +336,7 @@
       <div class="bridge" id="static-bridge"></div>
     </div>
 
-    <div class="grid gap-4 mt-4" style="grid-template-columns:1fr 1fr">
+    <div class="grid gap-4 mt-4 two-col">
       <div>
         <p class="muted" style="font-size:.9375rem">Even <em>inside</em> the agent channel, shipping-subsidized orders that would have arrived anyway (cannibalization) outweigh the volume and margin gain: agent-channel contribution alone is <strong class="mono">&minus;$10,118</strong>. Then the same discount applies to all ~9,400 non-agent orders/year, at <strong class="mono">&minus;$178,600</strong> — the number a selection-lift metric never sees.</p>
       </div>
@@ -306,10 +354,12 @@
     <h2 class="section-head">What's measured, and what's assumed</h2>
     <p class="section-intro mt-2">Selection rates above are measured, real-probe data. Everything below — the merchant unit economics that turns a selection rate into a dollar figure — is synthetic demo scenario, never merchant fact. Every dollar figure on this page inherits the "high" sensitivity rows.</p>
 
-    <table class="ledger-table mt-6">
-      <thead><tr><th>Input</th><th>Value</th><th>Status</th><th class="text-right">Sensitivity</th></tr></thead>
-      <tbody id="assumptions-body"></tbody>
-    </table>
+    <div class="table-wrap mt-6">
+      <table class="ledger-table">
+        <thead><tr><th>Input</th><th>Value</th><th>Status</th><th class="text-right">Sensitivity</th></tr></thead>
+        <tbody id="assumptions-body"></tbody>
+      </table>
+    </div>
   </div>
 </section>
 
@@ -322,14 +372,14 @@
 
     <div class="explorer mt-6">
       <div class="slider-row">
-        <div><div class="slider-name">Post&#8209;selection conversion</div><div class="slider-range">swept 42%&ndash;68%</div></div>
-        <input type="range" id="slider-q" min="0.42" max="0.68" step="0.005" value="0.55">
-        <div class="slider-val tabular" id="val-q">55%</div>
+        <label for="slider-q"><div class="slider-name">Post&#8209;selection conversion</div><div class="slider-range">swept 42%&ndash;68%</div></label>
+        <input type="range" id="slider-q" min="0.42" max="0.68" step="0.005" value="0.55" aria-valuetext="55%">
+        <div class="slider-val tabular" id="val-q" aria-live="polite">55%</div>
       </div>
       <div class="slider-row">
-        <div><div class="slider-name">Cannibalization rate</div><div class="slider-range">swept 0%&ndash;55%</div></div>
-        <input type="range" id="slider-k" min="0" max="0.55" step="0.005" value="0.30">
-        <div class="slider-val tabular" id="val-k">30%</div>
+        <label for="slider-k"><div class="slider-name">Cannibalization rate</div><div class="slider-range">swept 0%&ndash;55%</div></label>
+        <input type="range" id="slider-k" min="0" max="0.55" step="0.005" value="0.30" aria-valuetext="30%">
+        <div class="slider-val tabular" id="val-k" aria-live="polite">30%</div>
       </div>
 
       <div class="explorer-results" id="explorer-results"></div>
@@ -408,9 +458,15 @@
     return { grossDelta:grossDelta, cannibal:cannibal, agentGain:agentGain, nonAgent:nonAgent, total:agentGain+nonAgent };
   }
 
-  // ---- static bridge (free shipping, at defaults q0=.55 kappa=.30) ----
-  var shipAction = actions.filter(function(a){return a.id==="ship"})[0];
-  var b0 = bridge(shipAction, 0.55, 0.30);
+  // ---- static bridge (free shipping): EXACT posterior-mean cents from this
+  // run's artifacts/economics.json, not the bridge() point-estimate formula
+  // below — that formula evaluates at the prior midpoints, which is not the
+  // same number as the mean of a nonlinear function over the full posterior
+  // (Jensen's inequality). bridge() stays as-is for the interactive explorer,
+  // which is already captioned as an approximation; this static headline
+  // number is the one the surrounding prose and the decision table both
+  // quote, so it has to match them exactly, not approximately.
+  var b0 = { grossDelta:1996331, cannibal:3008164, agentGain:-1011832, nonAgent:-17860000, total:-18871832 };
   var bridgeSteps = [
     { label:"Gross agent-\nchannel delta", val:b0.grossDelta, dir:"up" },
     { label:"minus cannibal-\nization", val:-b0.cannibal, dir:"down" },
@@ -465,14 +521,15 @@
 
   function render(){
     var q0 = parseFloat(qSlider.value), kappa = parseFloat(kSlider.value);
-    qVal.textContent = Math.round(q0*100) + "%";
-    kVal.textContent = Math.round(kappa*100) + "%";
+    var qPct = Math.round(q0*100) + "%", kPct = Math.round(kappa*100) + "%";
+    qVal.textContent = qPct; qSlider.setAttribute("aria-valuetext", qPct);
+    kVal.textContent = kPct; kSlider.setAttribute("aria-valuetext", kPct);
     results.innerHTML = "";
     actions.forEach(function(a){
       var r = bridge(a, q0, kappa);
       var card = document.createElement("div"); card.className = "explorer-card";
       card.innerHTML = "<div class='lbl'>"+a.label+"</div>"+
-        "<div class='val "+(r.total>=0?"":"")+"' style='color:"+(r.total>=0?"var(--profit)":"var(--loss)")+"'>"+fmtUsd(r.total)+"</div>";
+        "<div class='val' style='color:"+(r.total>=0?"var(--profit)":"var(--loss)")+"'>"+fmtUsd(r.total)+"</div>";
       results.appendChild(card);
     });
   }
